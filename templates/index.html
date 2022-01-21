@@ -1,0 +1,8 @@
+<form action="/change_module" method="post">
+  {% for module in modules %}
+  <div>
+    <button name="module_name" value="{{module}}">{{module}}</button>
+  </div>
+  <br />
+  {% endfor %}
+</form>
