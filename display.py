@@ -27,14 +27,14 @@ class Display:
     # Modules
     self.modules = {
       'Gym Count Module': lambda: GymCountModule(self.matrix),
-      'Image Module': lambda: ImageModule(self.matrix, 'citi_bike.png'),
+      'Image Module': lambda: ImageModule(self.matrix, 'images/citi_bike.png'),
       'Scrolling Text Module': lambda: ScrollingTextModule(self.matrix, 'HELLO WORLD!!!')
     }
-    self.module = self.modules['Scrolling Text Module']()
+    self.module = self.modules['Gym Count Module']()
 
   def run(self):
     self.module.start()
-    self.flask_app.run(host='0.0.0.0')
+    # self.flask_app.run(host='0.0.0.0')
 
   def route_hello_world(self):
       return render_template('index.html', modules=list(self.modules.keys()))
