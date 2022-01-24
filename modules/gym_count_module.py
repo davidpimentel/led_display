@@ -17,9 +17,6 @@ class GymCountModule(BaseModule):
     self.font = graphics.Font()
     self.font.LoadFont("./fonts/6x9.bdf")
     self.textColor = graphics.Color(255, 255, 255)
-    self.pos = self.offscreen_canvas.width
-
-
 
   def delay_seconds(self):
     return 30

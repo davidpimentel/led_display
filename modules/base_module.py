@@ -7,7 +7,7 @@ class BaseModule(Thread):
     super().__init__()
     self.matrix = matrix
     self.stop_run = Event()
-    self.daemon = False
+    self.daemon = True
 
   def stop(self):
     self.stop_run.set()

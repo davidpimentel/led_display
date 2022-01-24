@@ -3,6 +3,7 @@ import time
 from flask import Flask, redirect, render_template, request
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 
+from modules.subway_module import SubwayModule
 from modules.gym_count_module import GymCountModule
 from modules.image_module import ImageModule
 from modules.scrolling_text_module import ScrollingTextModule
@@ -28,13 +29,14 @@ class Display:
     self.modules = {
       'Gym Count Module': lambda: GymCountModule(self.matrix),
       'Image Module': lambda: ImageModule(self.matrix, 'images/citi_bike.png'),
-      'Scrolling Text Module': lambda: ScrollingTextModule(self.matrix, 'HELLO WORLD!!!')
+      'Scrolling Text Module': lambda: ScrollingTextModule(self.matrix, 'HELLO WORLD!!!'),
+      'Subway Module': lambda: SubwayModule(self.matrix),
     }
-    self.module = self.modules['Gym Count Module']()
+    self.module = self.modules['Subway Module']()
 
   def run(self):
     self.module.start()
-    # self.flask_app.run(host='0.0.0.0')
+    self.flask_app.run(host='0.0.0.0')
 
   def route_hello_world(self):
       return render_template('index.html', modules=list(self.modules.keys()))
