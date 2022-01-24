@@ -3,10 +3,10 @@ import time
 from flask import Flask, redirect, render_template, request
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 
-from modules.subway_module import SubwayModule
 from modules.gym_count_module import GymCountModule
-from modules.image_module import ImageModule
 from modules.scrolling_text_module import ScrollingTextModule
+from modules.subway_module import SubwayModule
+from modules.who_chooses_module import WhoChoosesModule
 
 
 class Display:
@@ -28,11 +28,11 @@ class Display:
     # Modules
     self.modules = {
       'Gym Count Module': lambda: GymCountModule(self.matrix),
-      'Image Module': lambda: ImageModule(self.matrix, 'images/citi_bike.png'),
+      'Who Chooses Module': lambda: WhoChoosesModule(self.matrix),
       'Scrolling Text Module': lambda: ScrollingTextModule(self.matrix, 'HELLO WORLD!!!'),
       'Subway Module': lambda: SubwayModule(self.matrix),
     }
-    self.module = self.modules['Subway Module']()
+    self.module = self.modules['Who Chooses Module']()
 
   def run(self):
     self.module.start()
