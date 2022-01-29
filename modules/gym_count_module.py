@@ -1,5 +1,7 @@
 import subprocess
 
+from lib.colors import COLORS
+from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
 
@@ -14,9 +16,8 @@ class GymCountModule(BaseModule):
     self.vital_logo.thumbnail((32, 15), Image.NEAREST)
     self.drop = Image.open('./images/drop.png')
     self.drop.thumbnail((10, 16), Image.NEAREST)
-    self.font = graphics.Font()
-    self.font.LoadFont("./fonts/6x9.bdf")
-    self.textColor = graphics.Color(255, 255, 255)
+    self.font = FONTS['6x9']
+    self.textColor = COLORS['white']
 
   def delay_seconds(self):
     return 30

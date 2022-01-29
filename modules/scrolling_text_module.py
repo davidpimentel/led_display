@@ -1,3 +1,5 @@
+from lib.colors import COLORS
+from lib.fonts import FONTS
 from rgbmatrix import graphics
 
 from .base_module import BaseModule
@@ -8,9 +10,8 @@ class ScrollingTextModule(BaseModule):
     super().__init__(matrix)
     self.text = text
     self.offscreen_canvas = self.matrix.CreateFrameCanvas()
-    self.font = graphics.Font()
-    self.font.LoadFont("../rpi-rgb-led-matrix/fonts/7x13.bdf")
-    self.textColor = graphics.Color(255, 0, 255)
+    self.font = FONTS['7x13']
+    self.textColor = COLORS['white']
     self.pos = self.offscreen_canvas.width
 
   def delay_seconds(self):

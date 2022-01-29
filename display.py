@@ -32,7 +32,7 @@ class Display:
       'Scrolling Text Module': lambda: ScrollingTextModule(self.matrix, 'HELLO WORLD!!!'),
       'Subway Module': lambda: SubwayModule(self.matrix),
     }
-    self.module = self.modules['Who Chooses Module']()
+    self.module = self.modules['Gym Count Module']()
 
   def run(self):
     self.module.start()

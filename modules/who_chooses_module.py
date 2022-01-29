@@ -1,5 +1,7 @@
 import random
 
+from lib.colors import COLORS
+from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
 
@@ -10,12 +12,11 @@ class WhoChoosesModule(BaseModule):
   def __init__(self, matrix):
     super().__init__(matrix)
     self.rand_int = random.randint(0, 1)
-    self.font = graphics.Font()
-    self.font.LoadFont("./fonts/5x8.bdf")
+    self.font = FONTS['5x8']
     self.font_height = self.font.height
-    self.white = graphics.Color(255, 255, 255)
-    self.green = graphics.Color(134, 216, 80)
-    self.teal = graphics.Color(89, 216, 215)
+    self.white = COLOR['white']
+    self.green = COLOR['green']
+    self.teal = COLOR['teal']
 
   def delay_seconds(self):
     return 100
