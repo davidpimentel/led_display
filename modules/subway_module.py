@@ -12,7 +12,7 @@ class SubwayModule(BaseModule):
   def __init__(self, matrix):
     super().__init__(matrix)
     self.offscreen_canvas = self.matrix.CreateFrameCanvas()
-    self.g_train_logo = Image.open('./images/G.png').convert('RGB')
+    self.g_train_logo = Image.open('./images/subway_g.png').convert('RGB')
     self.g_train_logo.thumbnail((11, 11), Image.NEAREST)
     self.font = FONTS['6x9']
     self.textColor = COLORS['white']
