@@ -14,9 +14,9 @@ class WhoChoosesModule(BaseModule):
     self.rand_int = random.randint(0, 1)
     self.font = FONTS['5x8']
     self.font_height = self.font.height
-    self.white = COLOR['white']
-    self.green = COLOR['green']
-    self.teal = COLOR['teal']
+    self.white = COLORS['white']
+    self.green = COLORS['green']
+    self.teal = COLORS['teal']
 
   def delay_seconds(self):
     return 100
