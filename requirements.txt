@@ -1,2 +1,5 @@
 pillow
 flask
+gtfs-realtime-bindings
+requests
+nyct_gtfs
