@@ -28,6 +28,8 @@ class LTrain(BaseModule):
         self.offscreen_canvas.Clear()
 
         arrivals = subway_times.SubwayTimes().upcoming_arrivals()
+        if len(arrivals) != 2:
+            arrivals = ["No Data", "No Data"]
 
         self.offscreen_canvas.SetImage(self.train_logo, offset_x=3, offset_y=2)
         graphics.DrawText(
