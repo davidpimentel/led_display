@@ -33,8 +33,6 @@ class SubwayTimes:
             underway=underway,
         )
 
-        # self.feed.refresh()
-
         self.arrivals = []
         for trip in trips[:2]:
             # print("Last Update:", trip.last_position_update)
@@ -50,7 +48,7 @@ class SubwayTimes:
                     ]
 
                     if len(bedford_arrivals) == 0:
-                      continue
+                        continue
 
                     next = bedford_arrivals[0]
                     now = datetime.now()
@@ -67,6 +65,7 @@ class SubwayTimes:
             # print("----")
 
     def upcoming_arrivals(self):
+        self.feed.refresh()
         self.get_subway_times()
         return self.arrivals
 
