@@ -1,3 +1,10 @@
 #! /bin/bash
+set -e
 
-sudo -E venv/bin/python display.py
+touch log.txt
+touch pid
+
+sudo -E venv/bin/python display.py > log.txt 2>&1 &
+
+display_pid=$!
+echo "$display_pid" > pid
