@@ -1,74 +1,75 @@
-# from google.transit import gtfs_realtime_pb2
-# import requests
-
-
-from array import array
 from nyct_gtfs import NYCTFeed
 from datetime import datetime
 import math
+import os
 
 
 # Bedford Stop Info
-# ID: LO8N (trip.location)
-# Index: 18 (trip.current_stop_sequence_index)
+# ID: LO8N, LO8S
+
+# Greenpoint Stop
+# ID: G28N, G28S
 
 
 class SubwayTimes:
-    arrivals = []
+    api_key = os.getenv("MTA_API_KEY" "qiphNHwN4rHjI4Y0fZQv6dHckEk6S4U6tZ03zEw6")
+    feed = None
 
-    api_key = "qiphNHwN4rHjI4Y0fZQv6dHckEk6S4U6tZ03zEw6"
-    train = "L"
-    feed = NYCTFeed(train, api_key=api_key)
+    # The line-name for a train e.g. "G" or "L"
+    train = None
 
-    def __init__(self, train="L"):
+    def __init__(self, train=None):
         self.train = train
-        self.get_subway_times()
+        self.feed = NYCTFeed(train, api_key=self.api_key)
 
-    def get_subway_times(
-        self, travel_direction="N", headed_for_stop="L08N", underway=True
-    ):
+    def refresh(self):
+        self.feed.refresh()
+
+    def arrivals_for(self, stop_id=None, direction=None):
         trips = self.feed.filter_trips(
-            travel_direction=travel_direction,
-            headed_for_stop_id=headed_for_stop,
-            underway=underway,
+            headed_for_stop_id=stop_id, travel_direction=direction, underway=True
         )
 
-        self.arrivals = []
-        for trip in trips[:2]:
-            # print("Last Update:", trip.last_position_update)
-            # print("Station:", trip._stops.get_station_name(trip.location))
-            # print("Status:", trip.location_status)
-
+        arrivals = []
+        for trip in trips:
             try:
                 if len(trip.stop_time_updates) > 0:
-                    bedford_arrivals = [
+                    stop_arrivals = [
                         update
                         for update in trip.stop_time_updates
-                        if update.stop_id == "L08N"
+                        if update.stop_id == stop_id
                     ]
 
-                    if len(bedford_arrivals) == 0:
+                    if len(stop_arrivals) == 0:
                         continue
 
-                    next = bedford_arrivals[0]
-                    now = datetime.now()
-                    delta = next.arrival - now
-                    minutes_away = delta.total_seconds() / 60
-
-                    self.arrivals.append(math.ceil(minutes_away))
+                    arrivals.append(Arrival(stop_arrivals[0]))
             except Exception as err:
-                print("error fetching subway times", err)
+                print(f"error fetching subway times for {stop_id}", err)
                 continue
 
-            # print(trip.arrival)
-            # print("Departure Time: ", trip.departure_time)
-            # print("----")
-
-    def upcoming_arrivals(self):
-        self.feed.refresh()
-        self.get_subway_times()
-        return self.arrivals
+        return arrivals
 
 
-arrivals = SubwayTimes().upcoming_arrivals()
-print(arrivals)
+class Arrival:
+    _trip_update = None
+
+    def __init__(self, trip_update) -> None:
+        self._trip_update = trip_update
+
+    @property
+    def minutes_away(self) -> int:
+        return math.ceil(
+            (self._trip_update.arrival - datetime.now()).total_seconds() / 60
+        )
+
+    def is_makeable(self, walk_time=0) -> bool:
+        return self.minutes_away > walk_time
+
+
+# times = SubwayTimes(train="G")
+# g_times = times.feed.filter_trips(line_id="G")
+# court_sq = times.arrivals_for(stop_id="G28N", direction="N")
+# church_ave = times.arrivals_for(stop_id="G28S", direction="S")
+# eighth_ave = times.arrivals_for(stop_id="L08N", direction="N")
+# canarsie = times.arrivals_for(stop_id="L08N", direction="S")
