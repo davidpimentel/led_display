@@ -5,7 +5,7 @@ from rgbmatrix import graphics
 
 from modules.base_module import BaseModule
 
-from lib import subway_times
+from lib.subway_times import SubwayTimes
 
 
 class LTrain(BaseModule):
@@ -27,8 +27,10 @@ class LTrain(BaseModule):
     def render(self):
         self.offscreen_canvas.Clear()
 
-        arrivals = subway_times.SubwayTimes().upcoming_arrivals()
-        if len(arrivals) != 2:
+        trip = SubwayTimes(train="L")
+        arrivals = trip.arrivals_for(stop_id="L08N", direction="N")
+
+        if len(arrivals) < 2:
             arrivals = ["No Data", "No Data"]
 
         self.offscreen_canvas.SetImage(self.train_logo, offset_x=3, offset_y=2)
@@ -41,7 +43,7 @@ class LTrain(BaseModule):
             18,
             14,
             self.clockColor,
-            f"{arrivals[0]}min",
+            f"{arrivals[0].minutes_away}min",
         )
 
         graphics.DrawLine(self.offscreen_canvas, 0, 15, 63, 15, self.lineColor)
@@ -56,7 +58,7 @@ class LTrain(BaseModule):
             18,
             31,
             self.clockColor,
-            f"{arrivals[1]}min",
+            f"{arrivals[1].minutes_away}min",
         )
 
         self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
