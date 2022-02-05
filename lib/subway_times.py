@@ -12,7 +12,7 @@ import os
 
 
 class SubwayTimes:
-    api_key = os.getenv("MTA_API_KEY" "qiphNHwN4rHjI4Y0fZQv6dHckEk6S4U6tZ03zEw6")
+    api_key = os.getenv("MTA_API_KEY", "qiphNHwN4rHjI4Y0fZQv6dHckEk6S4U6tZ03zEw6")
     feed = None
 
     # The line-name for a train e.g. "G" or "L"

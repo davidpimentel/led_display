@@ -32,13 +32,13 @@ class GTrain(BaseModule):
         court_sq = trip.arrivals_for(stop_id="G28N", direction="N")
         church_ave = trip.arrivals_for(stop_id="G28S", direction="S")
 
-        if len(court_sq) < 2:
+        if len(court_sq) < 1:
             court_sq = ["No Data"]
 
-        if len(church_ave) < 2:
+        if len(church_ave) < 1:
             church_ave = ["No Data"]
 
-        self.offscreen_canvas.SetImage(self.train_logo, offset_x=3, offset_y=2)
+        self.offscreen_canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=2)
         graphics.DrawText(
             self.offscreen_canvas, self.font, 18, 7, self.stationColor, "COURT SQ"
         )
@@ -53,7 +53,7 @@ class GTrain(BaseModule):
 
         graphics.DrawLine(self.offscreen_canvas, 0, 15, 63, 15, self.lineColor)
 
-        self.offscreen_canvas.SetImage(self.train_logo, offset_x=3, offset_y=18)
+        self.offscreen_canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=18)
         graphics.DrawText(
             self.offscreen_canvas, self.font, 18, 24, self.stationColor, "CHURCH AVE"
         )
