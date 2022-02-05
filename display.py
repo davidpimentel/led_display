@@ -6,6 +6,7 @@ from modules.scrolling_text_module import ScrollingTextModule
 from modules.subway.g_train import GTrain
 from modules.subway.l_train import LTrain
 from modules.who_chooses_module import WhoChoosesModule
+from modules.citibike import Citibike
 
 
 class Display:
@@ -35,8 +36,9 @@ class Display:
             ),
             "G Train": lambda: GTrain(self.matrix),
             "L Train": lambda: LTrain(self.matrix),
+            "Citibike": lambda: Citibike(self.matrix),
         }
-        self.module = self.modules["L Train"]()
+        self.module = self.modules["Citibike"]()
 
     def run(self):
         self.module.start()
