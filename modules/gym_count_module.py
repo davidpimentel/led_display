@@ -28,13 +28,18 @@ class GymCountModule(BaseModule):
     def render(self):
         people_at_gym = str(
             subprocess.check_output(
-                ["curl", "https://display.safespace.io/value/live/a7796f34"]
+                [
+                  "curl",
+                  "--silent",
+                  "https://display.safespace.io/value/live/a7796f34"
+                ]
             ).decode("utf-8")
         )
         weather = json.loads(
             subprocess.check_output(
                 [
                     "curl",
+                    "--silent",
                     "api.openweathermap.org/data/2.5/weather?q=Brooklyn&appid=96d91031ccf9c0f23cabe15440f20be0&units=imperial",
                 ]
             ).decode("utf-8")
