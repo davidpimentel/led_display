@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, redirect, render_template, request
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -7,6 +9,16 @@ from modules.subway.g_train import GTrain
 from modules.subway.l_train import LTrain
 from modules.who_chooses_module import WhoChoosesModule
 from modules.citibike import Citibike
+
+# Modules
+module_spec = {
+    "Gym Count": lambda matrix, options: GymCountModule(matrix, **options),
+    "Who Chooses": lambda matrix, options: WhoChoosesModule(matrix, **options),
+    "Scrolling Text": lambda matrix, options: ScrollingTextModule(matrix, **options),
+    "G Train": lambda matrix, options: GTrain(matrix, **options),
+    "L Train": lambda matrix, options: LTrain(matrix, **options),
+    "Citibike": lambda matrix, options: Citibike(matrix, **options),
+}
 
 
 class Display:
@@ -27,18 +39,24 @@ class Display:
             self.route_change_module
         )
 
-        # Modules
-        self.modules = {
-            "Gym Count Module": lambda: GymCountModule(self.matrix),
-            "Who Chooses Module": lambda: WhoChoosesModule(self.matrix),
-            "Scrolling Text Module": lambda: ScrollingTextModule(
-                self.matrix, "HELLO WORLD!!!"
-            ),
-            "G Train": lambda: GTrain(self.matrix),
-            "L Train": lambda: LTrain(self.matrix),
-            "Citibike": lambda: Citibike(self.matrix),
-        }
-        self.module = self.modules["Citibike"]()
+        config = json.load(open("config.json"))
+
+        modules = {}
+
+        for mod_config in config["modules"]:
+
+            def init(mod_config):
+                def func():
+                    return module_spec[mod_config["module"]](
+                        self.matrix, mod_config["options"]
+                    )
+
+                return func
+
+            modules[mod_config["label"]] = init(mod_config)
+
+        self.modules = modules
+        self.module = self.modules[config["default"]]()
 
     def run(self):
         self.module.start()

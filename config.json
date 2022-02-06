@@ -1,0 +1,20 @@
+{
+    "default": "Citibike Tompkins",
+    "modules": [
+        {
+            "label": "Citibike Bedford",
+            "module": "Citibike",
+            "options": {
+                "station_id": "3101",
+                "station_name": "Bedford Ave"
+            }
+        },
+        {
+            "label": "Citibike Tompkins",
+            "module": "Citibike",
+            "options": {
+                "station_id": "432"
+            }
+        }
+    ]
+}

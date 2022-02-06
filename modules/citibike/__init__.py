@@ -11,7 +11,7 @@ from ..base_module import BaseModule
 
 
 class Citibike(BaseModule):
-    def __init__(self, matrix):
+    def __init__(self, matrix, station_id=None, station_name=None):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         self.font = FONTS["4x6"]
@@ -19,6 +19,23 @@ class Citibike(BaseModule):
         self.green = COLORS["green"]
         self.bike = Image.open("./images/bike.png")
         self.ebike = Image.open("./images/ebike.png")
+        self.station_id = station_id
+
+        if not station_name:
+            response = request.urlopen(
+                "https://gbfs.citibikenyc.com/gbfs/es/station_information.json"
+            )
+
+            list = json.loads(response.read())["data"]["stations"]
+
+            station_info = next(
+                (status for status in list if status["station_id"] == self.station_id),
+                None,
+            )
+
+            station_name = station_info["name"].replace("Avenue", "Ave")
+
+        self.station_name = station_name.upper()
 
     def delay_seconds(self):
         return 30
@@ -31,11 +48,11 @@ class Citibike(BaseModule):
         return 61 - len(char) * 4
 
     def render(self):
-        station_id = "432"  # A and 7th
+        # station_id = "432"  # A and 7th
         # station_id = "3101"  # bedford
         # station_id = "3108"  # Nassau
 
-        station_name = None
+        # station_name = None
         # station_name = "Bedford Ave"
 
         response = request.urlopen(
@@ -45,24 +62,11 @@ class Citibike(BaseModule):
         list = json.loads(response.read())["data"]["stations"]
 
         station_status = next(
-            (status for status in list if status["station_id"] == station_id), None
+            (status for status in list if status["station_id"] == self.station_id), None
         )
 
         num_bikes = str(station_status["num_bikes_available"])
         num_ebikes = str(station_status["num_ebikes_available"])
-
-        if not station_name:
-            response = request.urlopen(
-                "https://gbfs.citibikenyc.com/gbfs/es/station_information.json"
-            )
-
-            list = json.loads(response.read())["data"]["stations"]
-
-            station_info = next(
-                (status for status in list if status["station_id"] == station_id), None
-            )
-
-            station_name = station_info["name"].replace("Avenue", "Ave")
 
         self.offscreen_canvas.Clear()
 
@@ -75,7 +79,7 @@ class Citibike(BaseModule):
         )
 
         graphics.DrawText(
-            self.offscreen_canvas, self.font, 2, 7, self.white, station_name.upper()
+            self.offscreen_canvas, self.font, 2, 7, self.white, self.station_name
         )
 
         graphics.DrawText(
