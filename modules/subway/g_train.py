@@ -33,14 +33,14 @@ class GTrain(BaseModule):
         church_ave_arrivals = trip.arrivals_for(stop_id="G28S", direction="S")
 
         if len(court_sq_arrivals) < 1:
-            court_sq = ["No Trains"]
+            court_sq = "No Trains"
         else:
-            court_sq = court_sq_arrivals[0].minutes_away
+            court_sq = f"{court_sq_arrivals[0].minutes_away}min"
 
         if len(church_ave_arrivals) < 1:
-            church_ave = ["No Trains"]
+            church_ave = "No Trains"
         else:
-            church_ave = church_ave_arrivals[0].minutes_away
+            church_ave = f"{church_ave_arrivals[0].minutes_away}min"
 
         self.offscreen_canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=2)
         graphics.DrawText(
@@ -52,7 +52,7 @@ class GTrain(BaseModule):
             18,
             14,
             self.clockColor,
-            f"{court_sq}min",
+            court_sq,
         )
 
         graphics.DrawLine(self.offscreen_canvas, 0, 15, 63, 15, self.lineColor)
@@ -67,7 +67,7 @@ class GTrain(BaseModule):
             18,
             31,
             self.clockColor,
-            f"{church_ave}min",
+            church_ave,
         )
 
         self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
