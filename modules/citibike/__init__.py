@@ -4,7 +4,7 @@ import subprocess
 from lib.colors import COLORS
 from lib.fonts import FONTS
 from PIL import Image
-from RGBMatrixEmulator import graphics
+from rgbmatrix import graphics
 from urllib import request
 
 from ..base_module import BaseModule
@@ -31,12 +31,12 @@ class Citibike(BaseModule):
         return 61 - len(char) * 4
 
     def render(self):
-        station_id = "432"  # A and 7th
-        # station_id = "3101"  # bedford
+        # station_id = "432"  # A and 7th
+        station_id = "3101"  # bedford
         # station_id = "3108"  # Nassau
 
-        station_name = None
-        # station_name = "Bedford Ave"
+        # station_name = None
+        station_name = "Bedford Ave"
 
         response = request.urlopen(
             "https://gbfs.citibikenyc.com/gbfs/es/station_status.json"

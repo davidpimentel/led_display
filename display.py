@@ -38,7 +38,7 @@ class Display:
             "L Train": lambda: LTrain(self.matrix),
             "Citibike": lambda: Citibike(self.matrix),
         }
-        self.module = self.modules["Citibike"]()
+        self.module = self.modules["G Train"]()
 
     def run(self):
         self.module.start()
