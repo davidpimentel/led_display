@@ -1,6 +1,8 @@
 from flask import Flask, redirect, render_template, request
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
+import sentry_sdk
+
 from modules.gym_count_module import GymCountModule
 from modules.scrolling_text_module import ScrollingTextModule
 from modules.subway.g_train import GTrain
@@ -54,5 +56,13 @@ class Display:
         self.module.start()
         return redirect("/")
 
+
+sentry_sdk.init(
+    "https://4f39f9d71b4743bcbd3c04c5b1628799@o1136978.ingest.sentry.io/6189103",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+)
 
 Display().run()
