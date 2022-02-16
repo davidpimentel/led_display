@@ -3,6 +3,7 @@ from flask import Flask, redirect, render_template, request
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 from modules.citibike import Citibike
+from modules.clock_module import ClockModule
 from modules.gym_count_module import GymCountModule
 from modules.scrolling_text_module import ScrollingTextModule
 from modules.subway.g_train import GTrain
@@ -42,8 +43,9 @@ class Display:
             "G Train": lambda: GTrain(self.matrix),
             "L Train": lambda: LTrain(self.matrix),
             "Citibike": lambda: Citibike(self.matrix),
+            "Clock Module": lambda: ClockModule(self.matrix),
         }
-        self.module = self.modules["G Train"]()
+        self.module = self.modules["Clock Module"]()
 
     def run(self):
         self.module.start()

@@ -1,6 +1,8 @@
-pillow
-flask
-gtfs-realtime-bindings
-requests
-nyct_gtfs
-sentry_sdk
+pillow==9.0.0
+flask==2.0.2
+gtfs-realtime-bindings==0.0.7
+requests==2.27.1
+nyct_gtfs==1.2.0
+pytz==2021.3
+sentry_sdk==1.5.4
+num2words==0.5.10
