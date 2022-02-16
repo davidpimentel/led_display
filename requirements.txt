@@ -3,3 +3,4 @@ flask
 gtfs-realtime-bindings
 requests
 nyct_gtfs
+sentry_sdk

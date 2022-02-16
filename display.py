@@ -1,14 +1,13 @@
+import sentry_sdk
 from flask import Flask, redirect, render_template, request
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-import sentry_sdk
-
+from modules.citibike import Citibike
 from modules.gym_count_module import GymCountModule
 from modules.scrolling_text_module import ScrollingTextModule
 from modules.subway.g_train import GTrain
 from modules.subway.l_train import LTrain
 from modules.who_chooses_module import WhoChoosesModule
-from modules.citibike import Citibike
 
 
 class Display:
@@ -27,6 +26,10 @@ class Display:
         self.flask_app.route("/")(self.route_hello_world)
         self.flask_app.route("/change_module", methods=["POST"])(
             self.route_change_module
+        )
+
+        self.flask_app.route("/turn_off_screen", methods=["POST"])(
+            self.route_turn_off_screen
         )
 
         # Modules
@@ -51,9 +54,18 @@ class Display:
 
     def route_change_module(self):
         module_name = request.form["module_name"]
-        self.module.stop()
+        if self.module:
+          self.module.stop()
+
         self.module = self.modules[module_name]()
         self.module.start()
+        return redirect("/")
+
+    def route_turn_off_screen(self):
+        if self.module:
+          self.module.stop()
+          self.module = None
+
         return redirect("/")
 
 
