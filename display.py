@@ -4,6 +4,7 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 from modules.citibike import Citibike
 from modules.clock_module import ClockModule
+from modules.color_test import ColorTest
 from modules.gym_count_module import GymCountModule
 from modules.scrolling_text_module import ScrollingTextModule
 from modules.subway.g_train import GTrain
@@ -44,6 +45,7 @@ class Display:
             "L Train": lambda: LTrain(self.matrix),
             "Citibike": lambda: Citibike(self.matrix),
             "Clock Module": lambda: ClockModule(self.matrix),
+            "Color Test": lambda: ColorTest(self.matrix)
         }
         self.module = self.modules["Clock Module"]()
 
