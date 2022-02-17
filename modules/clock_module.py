@@ -32,6 +32,12 @@ class ClockModule(BaseModule):
       hours, minutes = hours_minutes
       hours_words = num2words(hours)
       minutes_words = num2words(minutes)
+
+      if minutes == 0:
+        minutes_words = "o'clock"
+      elif minutes < 10:
+        minutes_words = "oh " + minutes_words
+
       minutes_words = minutes_words.replace('-', ' ')
       return (hours_words + " " + minutes_words).upper()
 
