@@ -53,8 +53,8 @@ class ClockModule(BaseModule):
           graphics.DrawText(
               self.offscreen_canvas,
               self.font,
-              4,
-              10 + i * 10,
+              3,
+              10 + i * 9,
               COLORS["white"],
               word
           )
