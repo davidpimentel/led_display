@@ -1,5 +1,6 @@
 import sentry_sdk
-from flask import Flask, redirect, render_template, request
+from flask import (Flask, redirect, render_template, request,
+                   send_from_directory)
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 from modules.citibike import Citibike
@@ -33,6 +34,7 @@ class Display:
         self.flask_app.route("/turn_off_screen", methods=["POST"])(
             self.route_turn_off_screen
         )
+        self.flask_app.route("/manifest.json")(self.route_pwa_manfiest)
 
         # Modules
         self.modules = {
@@ -71,6 +73,9 @@ class Display:
           self.module = None
 
         return redirect("/")
+
+    def route_pwa_manfiest(self):
+      return send_from_directory('templates', 'manifest.json')
 
 
 sentry_sdk.init(
