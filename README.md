@@ -1,5 +1,10 @@
 ## Installation
 
+
+## Spotify Configuration
+In the venv, run `python scripts/spotify_auth.py --user [username]`
+
+
 ## Subway Times
 
 Stop IDs differ based on the direction the train is heading. Here are the currently supported stop IDS:

@@ -1,4 +1,5 @@
 import sentry_sdk
+from dotenv import load_dotenv
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory)
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
@@ -8,6 +9,7 @@ from modules.clock_module import ClockModule
 from modules.color_test import ColorTest
 from modules.gym_count_module import GymCountModule
 from modules.scrolling_text_module import ScrollingTextModule
+from modules.spotify_module import SpotifyModule
 from modules.subway.g_train import GTrain
 from modules.subway.l_train import LTrain
 from modules.who_chooses_module import WhoChoosesModule
@@ -47,7 +49,8 @@ class Display:
             "L Train": lambda: LTrain(self.matrix),
             "Citibike": lambda: Citibike(self.matrix),
             "Clock Module": lambda: ClockModule(self.matrix),
-            "Color Test": lambda: ColorTest(self.matrix)
+            "Color Test": lambda: ColorTest(self.matrix),
+            "Spotify": lambda: SpotifyModule(self.matrix)
         }
         self.module = self.modules["Clock Module"]()
 
@@ -85,5 +88,8 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     traces_sample_rate=1.0,
 )
+
+# This loads in environment variables from .env file
+load_dotenv()
 
 Display().run()
