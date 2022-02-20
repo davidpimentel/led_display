@@ -1,0 +1,17 @@
+screens:
+  clock:
+    display_name: Word Clock
+  color_test:
+    display_name: Color Test
+  gym_count:
+    display_name: Gym Count
+  hello_world:
+    display_name: Hello World
+  spotify:
+    display_name: Spotify
+  subway:
+    display_name: Subway
+  who_chooses:
+    display_name: Who Chooses
+  citibike:
+    display_name: Citibike

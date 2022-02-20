@@ -7,10 +7,10 @@ from num2words import num2words
 from PIL import Image
 from rgbmatrix import graphics
 
-from .base_screen import BaseScreen
+from screens.base_screen import BaseScreen
 
 
-class ClockScreen(BaseScreen):
+class Screen(BaseScreen):
     def __init__(self, matrix):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()

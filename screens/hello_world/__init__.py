@@ -1,14 +1,13 @@
 from lib.colors import COLORS
 from lib.fonts import FONTS
 from rgbmatrix import graphics
+from screens.base_screen import BaseScreen
 
-from .base_screen import BaseScreen
 
-
-class ScrollingTextScreen(BaseScreen):
-    def __init__(self, matrix, text):
+class Screen(BaseScreen):
+    def __init__(self, matrix):
         super().__init__(matrix)
-        self.text = text
+        self.text = "HELLO WORLD"
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         self.font = FONTS["7x13"]
         self.textColor = COLORS["white"]

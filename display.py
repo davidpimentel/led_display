@@ -1,18 +1,11 @@
+import importlib
+
 import sentry_sdk
+import yaml
 from dotenv import load_dotenv
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory)
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-
-from screens.citibike import Citibike
-from screens.clock_screen import ClockScreen
-from screens.color_test import ColorTest
-from screens.gym_count_screen import GymCountScreen
-from screens.scrolling_text_screen import ScrollingTextScreen
-from screens.spotify_screen import SpotifyScreen
-from screens.subway.g_train import GTrain
-from screens.subway.l_train import LTrain
-from screens.who_chooses_screen import WhoChoosesScreen
 
 
 class Display:
@@ -38,21 +31,14 @@ class Display:
         )
         self.flask_app.route("/manifest.json")(self.route_pwa_manfiest)
 
-        # Screens
-        self.screens = {
-            "Gym Count Screen": lambda: GymCountScreen(self.matrix),
-            "Who Chooses Screen": lambda: WhoChoosesScreen(self.matrix),
-            "Scrolling Text Screen": lambda: ScrollingTextScreen(
-                self.matrix, "HELLO WORLD!!!"
-            ),
-            "G Train": lambda: GTrain(self.matrix),
-            "L Train": lambda: LTrain(self.matrix),
-            "Citibike": lambda: Citibike(self.matrix),
-            "Clock Screen": lambda: ClockScreen(self.matrix),
-            "Color Test": lambda: ColorTest(self.matrix),
-            "Spotify": lambda: SpotifyScreen(self.matrix)
-        }
-        self.screen = self.screens["Clock Screen"]()
+        # Config/ Screen loading
+        with open("config.yml", "r") as config_file:
+          config = yaml.safe_load(config_file)
+
+        self.screens = config["screens"]
+
+        # pick the first screen in the dict to start
+        self.load_screen(next(iter(self.screens)))
 
     def run(self):
         self.screen.start()
@@ -66,7 +52,7 @@ class Display:
         if self.screen:
           self.screen.stop()
 
-        self.screen = self.screens[screen_name]()
+        self.load_screen(screen_name)
         self.screen.start()
         return redirect("/")
 
@@ -79,6 +65,9 @@ class Display:
 
     def route_pwa_manfiest(self):
       return send_from_directory('templates', 'manifest.json')
+
+    def load_screen(self, screen_name):
+      self.screen = importlib.import_module("screens." + screen_name).Screen(self.matrix)
 
 
 sentry_sdk.init(

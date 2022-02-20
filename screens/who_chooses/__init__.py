@@ -5,7 +5,7 @@ from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
 
-from .base_screen import BaseScreen
+from screens.base_screen import BaseScreen
 
 
 class WhoChoosesScreen(BaseScreen):
