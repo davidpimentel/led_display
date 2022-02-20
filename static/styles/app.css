@@ -1,0 +1,23 @@
+@font-face {
+  font-family: ms-sans;
+  src: url("/static/fonts/ms-sans-serif.ttf");
+}
+
+body {
+  font-family: ms-sans;
+}
+
+.change-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.change-screen .screen-selection {
+  margin-block-end: 1rem;
+  width: 20rem;
+}
+
+.screen-selection button {
+  width: 100%;
+}
