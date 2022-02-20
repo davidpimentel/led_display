@@ -1,9 +1,14 @@
 ## Installation
 
+Install dependencies from within a venv
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Spotify Configuration
-In the venv, run `python scripts/spotify_auth.py --user [username]`
 
+In the venv, run `python scripts/spotify_auth.py --user [username]`
 
 ## Subway Times
 

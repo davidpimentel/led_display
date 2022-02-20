@@ -1,26 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
-  <title>Tidbyt</title>
-</head>
+    <!-- PWA Tags -->
 
-<body>
-  <form action="/change_module" method="post">
-    {% for module in modules %}
-    <div>
-      <button name="module_name" value="{{module}}">{{module}}</button>
-    </div>
-    <br />
-    {% endfor %}
-  </form>
-  <form action="/turn_off_screen" method="post">
-    <input type="submit" name="turn_off" value="Turn Off" />
-  </form>
-</body>
+    <link rel="manifest" href="manifest.json" />
 
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-title" content="Tidbyt" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <!-- Startup Image  -->
+    <link
+      href="touch-icon-start-up-320x480.png"
+      rel="apple-touch-startup-image"
+    />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="/static/assets/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/styles/w95.css" />
+    <script src="/static/js/w95.js" async></script>
+
+    <title>Tidbyt</title>
+  </head>
+
+  <body>
+    <form action="/change_module" method="post">
+      {% for module in modules %}
+      <div>
+        <button name="module_name" value="{{module}}">{{module}}</button>
+      </div>
+      <br />
+      {% endfor %}
+    </form>
+    <form action="/turn_off_screen" method="post">
+      <input type="submit" name="turn_off" value="Turn Off" />
+    </form>
+  </body>
 </html>
