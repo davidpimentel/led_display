@@ -4,15 +4,15 @@ from flask import (Flask, redirect, render_template, request,
                    send_from_directory)
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-from modules.citibike import Citibike
-from modules.clock_module import ClockModule
-from modules.color_test import ColorTest
-from modules.gym_count_module import GymCountModule
-from modules.scrolling_text_module import ScrollingTextModule
-from modules.spotify_module import SpotifyModule
-from modules.subway.g_train import GTrain
-from modules.subway.l_train import LTrain
-from modules.who_chooses_module import WhoChoosesModule
+from screens.citibike import Citibike
+from screens.clock_screen import ClockScreen
+from screens.color_test import ColorTest
+from screens.gym_count_screen import GymCountScreen
+from screens.scrolling_text_screen import ScrollingTextScreen
+from screens.spotify_screen import SpotifyScreen
+from screens.subway.g_train import GTrain
+from screens.subway.l_train import LTrain
+from screens.who_chooses_screen import WhoChoosesScreen
 
 
 class Display:
@@ -29,8 +29,8 @@ class Display:
         # Flask app
         self.flask_app = Flask(__name__)
         self.flask_app.route("/")(self.route_hello_world)
-        self.flask_app.route("/change_module", methods=["POST"])(
-            self.route_change_module
+        self.flask_app.route("/change_screen", methods=["POST"])(
+            self.route_change_screen
         )
 
         self.flask_app.route("/turn_off_screen", methods=["POST"])(
@@ -38,42 +38,42 @@ class Display:
         )
         self.flask_app.route("/manifest.json")(self.route_pwa_manfiest)
 
-        # Modules
-        self.modules = {
-            "Gym Count Module": lambda: GymCountModule(self.matrix),
-            "Who Chooses Module": lambda: WhoChoosesModule(self.matrix),
-            "Scrolling Text Module": lambda: ScrollingTextModule(
+        # Screens
+        self.screens = {
+            "Gym Count Screen": lambda: GymCountScreen(self.matrix),
+            "Who Chooses Screen": lambda: WhoChoosesScreen(self.matrix),
+            "Scrolling Text Screen": lambda: ScrollingTextScreen(
                 self.matrix, "HELLO WORLD!!!"
             ),
             "G Train": lambda: GTrain(self.matrix),
             "L Train": lambda: LTrain(self.matrix),
             "Citibike": lambda: Citibike(self.matrix),
-            "Clock Module": lambda: ClockModule(self.matrix),
+            "Clock Screen": lambda: ClockScreen(self.matrix),
             "Color Test": lambda: ColorTest(self.matrix),
-            "Spotify": lambda: SpotifyModule(self.matrix)
+            "Spotify": lambda: SpotifyScreen(self.matrix)
         }
-        self.module = self.modules["Clock Module"]()
+        self.screen = self.screens["Clock Screen"]()
 
     def run(self):
-        self.module.start()
+        self.screen.start()
         self.flask_app.run(host="0.0.0.0")
 
     def route_hello_world(self):
-        return render_template("index.html", modules=list(self.modules.keys()))
+        return render_template("index.html", screens=list(self.screens.keys()))
 
-    def route_change_module(self):
-        module_name = request.form["module_name"]
-        if self.module:
-          self.module.stop()
+    def route_change_screen(self):
+        screen_name = request.form["screen_name"]
+        if self.screen:
+          self.screen.stop()
 
-        self.module = self.modules[module_name]()
-        self.module.start()
+        self.screen = self.screens[screen_name]()
+        self.screen.start()
         return redirect("/")
 
     def route_turn_off_screen(self):
-        if self.module:
-          self.module.stop()
-          self.module = None
+        if self.screen:
+          self.screen.stop()
+          self.screen = None
 
         return redirect("/")
 

@@ -2,10 +2,10 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from rgbmatrix import graphics
 
-from .base_module import BaseModule
+from .base_screen import BaseScreen
 
 
-class ScrollingTextModule(BaseModule):
+class ScrollingTextScreen(BaseScreen):
     def __init__(self, matrix, text):
         super().__init__(matrix)
         self.text = text

@@ -9,10 +9,10 @@ from rgbmatrix import graphics
 from spotipy.cache_handler import CacheFileHandler
 from spotipy.oauth2 import SpotifyOAuth
 
-from .base_module import BaseModule
+from .base_screen import BaseScreen
 
 
-class SpotifyModule(BaseModule):
+class SpotifyScreen(BaseScreen):
     def __init__(self, matrix, username="dave"):
         super().__init__(matrix)
         scope = "user-read-currently-playing"

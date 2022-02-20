@@ -2,7 +2,7 @@ import time
 from threading import Event, Thread
 
 
-class BaseModule(Thread):
+class BaseScreen(Thread):
     def __init__(self, matrix):
         super().__init__()
         self.matrix = matrix

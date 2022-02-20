@@ -5,10 +5,10 @@ from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
 
-from .base_module import BaseModule
+from .base_screen import BaseScreen
 
 
-class WhoChoosesModule(BaseModule):
+class WhoChoosesScreen(BaseScreen):
     def __init__(self, matrix):
         super().__init__(matrix)
         self.rand_int = random.randint(0, 1)

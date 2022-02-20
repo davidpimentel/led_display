@@ -6,10 +6,10 @@ from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
 
-from .base_module import BaseModule
+from .base_screen import BaseScreen
 
 
-class GymCountModule(BaseModule):
+class GymCountScreen(BaseScreen):
     def __init__(self, matrix):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()

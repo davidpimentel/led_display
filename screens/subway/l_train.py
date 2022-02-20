@@ -3,12 +3,12 @@ from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
 
-from modules.base_module import BaseModule
+from screens.base_screen import BaseScreen
 
 from lib.subway_times import SubwayTimes
 
 
-class LTrain(BaseModule):
+class LTrain(BaseScreen):
     def __init__(self, matrix):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()

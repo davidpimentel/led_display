@@ -1,9 +1,9 @@
 from rgbmatrix import graphics
 
-from .base_module import BaseModule
+from .base_screen import BaseScreen
 
 
-class ColorTest(BaseModule):
+class ColorTest(BaseScreen):
     def __init__(self, matrix):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()

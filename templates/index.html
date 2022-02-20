@@ -1,51 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
-    />
 
-    <!-- PWA Tags -->
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 
-    <link rel="manifest" href="manifest.json" />
+  <!-- PWA Tags -->
 
-    <!-- iOS -->
-    <meta name="apple-mobile-web-app-title" content="Tidbyt" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.json" />
 
-    <!-- Startup Image  -->
-    <link
-      href="touch-icon-start-up-320x480.png"
-      rel="apple-touch-startup-image"
-    />
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-title" content="Tidbyt" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
-    <!-- Icons -->
-    <link rel="apple-touch-icon" href="/static/assets/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <!-- Startup Image  -->
+  <link href="touch-icon-start-up-320x480.png" rel="apple-touch-startup-image" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/static/styles/w95.css" />
-    <script src="/static/js/w95.js" async></script>
+  <!-- Icons -->
+  <link rel="apple-touch-icon" href="/static/assets/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 
-    <title>Tidbyt</title>
-  </head>
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/w95.css" />
+  <script src="/static/js/w95.js" async></script>
 
-  <body>
-    <form action="/change_module" method="post">
-      {% for module in modules %}
-      <div>
-        <button name="module_name" value="{{module}}">{{module}}</button>
-      </div>
-      <br />
-      {% endfor %}
-    </form>
-    <form action="/turn_off_screen" method="post">
-      <input type="submit" name="turn_off" value="Turn Off" />
-    </form>
-  </body>
+  <title>Tidbyt</title>
+</head>
+
+<body>
+  <form action="/change_screen" method="post">
+    {% for screen in screens %}
+    <div>
+      <button name="screen_name" value="{{screen}}">{{screen}}</button>
+    </div>
+    <br />
+    {% endfor %}
+  </form>
+  <form action="/turn_off_screen" method="post">
+    <input type="submit" name="turn_off" value="Turn Off" />
+  </form>
+</body>
+
 </html>
