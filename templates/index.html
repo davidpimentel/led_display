@@ -1,75 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- Favicon -->
+    <link
+      href="/static/assets/favicon-16x16.png"
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+    />
+    <link
+      href="/static/assets/favicon-32x32.png"
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+    />
 
-  <!-- PWA Tags -->
+    <!-- PWA Tags -->
 
-  <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="manifest.json" />
 
-  <!-- iOS -->
-  <meta name="apple-mobile-web-app-title" content="Tidbyt" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-title" content="My Computer" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
-  <!-- Startup Image  -->
-  <link href="touch-icon-start-up-320x480.png" rel="apple-touch-startup-image" />
+    <!-- Startup Image  -->
+    <link
+      href="touch-icon-start-up-320x480.png"
+      rel="apple-touch-startup-image"
+    />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="/static/styles/w95.css" />
-  <link rel="stylesheet" href="/static/styles/app.css" />
-  <!-- <script src="/static/js/jquery.js" async></script> -->
-  <!-- <script src="/static/js/w95.js" async></script> -->
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/styles/w95.css" />
+    <link rel="stylesheet" href="/static/styles/app.css" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="/static/styles/w95.css" />
-  <link rel="stylesheet" href="/static/styles/app.css" />
-  <script src="/static/js/jquery.js" async></script>
-  <script src="/static/js/w95.js" async></script>
+    <!-- Fonts -->
+    <!-- <link
+      rel="preload"
+      href="/static/fonts/VT323/VT323-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    /> -->
 
-<body>
-  <!-- Grid of icons -->
-  <main>
-    <div class="app-grid">
-      {% for screen_name in screens.keys(): %}
-      {% set screen = screens[screen_name] %}
-      <div class="screen-launch" data-screen="{{screen_name}}">
-        <div class="app-icon"></div>
-        <p class="app-label">{{screen.display_name}}</p>
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/styles/w95.css" />
+    <link rel="stylesheet" href="/static/styles/app.css" />
+
+    <!-- Scripts -->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/w95.js" async></script>
+  </head>
+
+  <body>
+    <!-- Grid of icons -->
+    <main>
+      <div class="app-grid">
+        {% for screen_name in screens.keys(): %} {% set screen =
+        screens[screen_name] %}
+        <div class="screen-launch" data-screen="{{screen_name}}">
+          <div class="app-icon" data-screen="{{screen_name}}"></div>
+          <p class="app-label" data-screen="{{screen_name}}">
+            {{screen.display_name}}
+          </p>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
-  </main>
+    </main>
 
-  <footer>
-    <button class="btn btn-sm mr-2 mb-2 btn-primary" type="button">
-      <div class="start-icon">
-        <!-- <img src="/static/assets/my-computer.png" alt=""> -->
-      </div>
-      <span class="btn-text">Start</span>
-    </button>
-  </footer>
+    <!-- Start Menu -->
+    <footer>
+      <button class="btn btn-sm mr-2 mb-2 btn-primary start-btn" type="button">
+        <div class="start-icon"></div>
+        <div>Start</div>
+      </button>
 
-  <!-- Start menu -->
-  <!-- <nav class="navbar navbar-expand-lg navbar-dark justify-content-between">
-      <ul class="navbar-nav navbar-nav-hover flex-row align-items-center">
-        <li class="nav-item">
-          <a href="../index.html" class="nav-link" role="button">
-            <span class="nav-link-inner-text">📺 Start</span>
-          </a>
-        </li>
-      </ul>
-      <div class="time text-center">
-        <span class="time text-uppercase">1:47 PM</span>
-      </div>
-    </nav> -->
+      <div class="clock">12:21PM</div>
+    </footer>
 
-  <!-- <form action="/turn_off_screen" method="post">
-        <input type="submit" name="turn_off" value="Turn Off" />
-      </form> -->
-</body>
+    <script>
+      (function () {
+        const screenLaunchIcons = document.querySelectorAll(".screen-launch");
 
+        screenLaunchIcons.forEach((el) => {
+          el.addEventListener("click", (e) => {
+            const screenName = e.target.getAttribute("data-screen");
+
+            if (!screenName) {
+              return false;
+            }
+
+            const formData = new FormData();
+            formData.append("screen_name", screenName);
+
+            debugger;
+            fetch("/change_screen", {
+              method: "post",
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              body: formData,
+            });
+          });
+        });
+      })();
+    </script>
+  </body>
 </html>

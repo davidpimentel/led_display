@@ -3,21 +3,21 @@ import importlib
 import sentry_sdk
 import yaml
 from dotenv import load_dotenv
-from flask import (Flask, redirect, render_template, request,
-                   send_from_directory)
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from flask import Flask, redirect, render_template, request, send_from_directory
+
+# from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 
 class Display:
     def __init__(self):
         # Configuration for the matrix
-        options = RGBMatrixOptions()
-        options.rows = 32
-        options.cols = 64
-        options.chain_length = 1
-        options.parallel = 1
-        options.hardware_mapping = "adafruit-hat-pwm"
-        self.matrix = RGBMatrix(options=options)
+        # options = RGBMatrixOptions()
+        # options.rows = 32
+        # options.cols = 64
+        # options.chain_length = 1
+        # options.parallel = 1
+        # options.hardware_mapping = "adafruit-hat-pwm"
+        # self.matrix = RGBMatrix(options=options)
 
         # Flask app
         self.flask_app = Flask(__name__)
@@ -33,16 +33,16 @@ class Display:
 
         # Config/ Screen loading
         with open("config.yml", "r") as config_file:
-          config = yaml.safe_load(config_file)
+            config = yaml.safe_load(config_file)
 
         self.screens = config["screens"]
 
         # pick the first screen in the dict to start
-        self.load_screen(next(iter(self.screens)))
+        # self.load_screen(next(iter(self.screens)))
 
     def run(self):
-        self.screen.start()
-        self.flask_app.run(host="0.0.0.0")
+        # self.screen.start()
+        self.flask_app.run(host="0.0.0.0", port="3000")
 
     def route_hello_world(self):
         return render_template("index.html", screens=self.screens)
@@ -50,7 +50,7 @@ class Display:
     def route_change_screen(self):
         screen_name = request.form["screen_name"]
         if self.screen:
-          self.screen.stop()
+            self.screen.stop()
 
         self.load_screen(screen_name)
         self.screen.start()
@@ -58,18 +58,20 @@ class Display:
 
     def route_turn_off_screen(self):
         if self.screen:
-          self.screen.stop()
-          self.screen = None
+            self.screen.stop()
+            self.screen = None
 
         return redirect("/")
 
     def route_pwa_manfiest(self):
-      return send_from_directory('templates', 'manifest.json')
+        return send_from_directory("templates", "manifest.json")
 
     def load_screen(self, screen_name):
-      screen_dict = self.screens[screen_name]
-      kwargs = screen_dict.get("args", {})
-      self.screen = importlib.import_module("screens." + screen_name).Screen(self.matrix, **kwargs)
+        screen_dict = self.screens[screen_name]
+        kwargs = screen_dict.get("args", {})
+        self.screen = importlib.import_module("screens." + screen_name).Screen(
+            self.matrix, **kwargs
+        )
 
 
 sentry_sdk.init(
