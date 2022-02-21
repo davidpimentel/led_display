@@ -3,21 +3,21 @@ import importlib
 import sentry_sdk
 import yaml
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, request, send_from_directory
-
-# from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from flask import (Flask, redirect, render_template, request,
+                   send_from_directory)
+from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 
 class Display:
     def __init__(self):
         # Configuration for the matrix
-        # options = RGBMatrixOptions()
-        # options.rows = 32
-        # options.cols = 64
-        # options.chain_length = 1
-        # options.parallel = 1
-        # options.hardware_mapping = "adafruit-hat-pwm"
-        # self.matrix = RGBMatrix(options=options)
+        options = RGBMatrixOptions()
+        options.rows = 32
+        options.cols = 64
+        options.chain_length = 1
+        options.parallel = 1
+        options.hardware_mapping = "adafruit-hat-pwm"
+        self.matrix = RGBMatrix(options=options)
 
         # Flask app
         self.flask_app = Flask(__name__)
@@ -38,10 +38,10 @@ class Display:
         self.screens = config["screens"]
 
         # pick the first screen in the dict to start
-        # self.load_screen(next(iter(self.screens)))
+        self.load_screen(next(iter(self.screens)))
 
     def run(self):
-        # self.screen.start()
+        self.screen.start()
         self.flask_app.run(host="0.0.0.0", port="3000")
 
     def route_hello_world(self):
