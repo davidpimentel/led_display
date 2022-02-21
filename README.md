@@ -1,27 +1,21 @@
 ## Installation
 
+To active your venv, run `source venv/bin/activate`, to deactivate run `deactivate`
+
 Install dependencies from within a venv
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Spotify Configuration
+## Running
+start the program by running `./run`, stop the program by running `./stop`
 
-In the venv, run `python scripts/spotify_auth.py --user [username]`
+## Creating a module
+To add a module:
 
-## Subway Times
+1. Create a folder with the name of your module
+1. in `__init__.py`, create a class called `Screen(BaseModule)` and implement your screen there
+1. in `config.yml`, add your screen along with it's display_name and any other args
+1. (optional) include any library code or README.md for any module specific setup
 
-Stop IDs differ based on the direction the train is heading. Here are the currently supported stop IDS:
-
-G Train - Nassau
-Northbound: `G28N`
-Southbound: `G28S`
-
-L Train - Bedford
-Northbound: `L08N`
-Southbound: `L08S`
-
-L Train - 1st Ave
-Northbound: `L06N`
-Southbound: `L06S`
