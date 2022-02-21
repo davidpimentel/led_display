@@ -9,6 +9,8 @@ screens:
     display_name: Hello World
   spotify:
     display_name: Spotify
+    args:
+      username: dave
   subway:
     display_name: Subway
   who_chooses:

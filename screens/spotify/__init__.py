@@ -6,14 +6,13 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
+from screens.base_screen import BaseScreen
 from spotipy.cache_handler import CacheFileHandler
 from spotipy.oauth2 import SpotifyOAuth
 
-from screens.base_screen import BaseScreen
-
 
 class Screen(BaseScreen):
-    def __init__(self, matrix, username="dave"):
+    def __init__(self, matrix, username=None):
         super().__init__(matrix)
         scope = "user-read-currently-playing"
         self.font = FONTS["6x9"]
