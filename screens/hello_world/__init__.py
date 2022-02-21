@@ -6,9 +6,9 @@ from screens.base_screen import BaseScreen
 
 
 class Screen(BaseScreen):
-    def __init__(self, matrix):
+    def __init__(self, matrix, text="hola world"):
         super().__init__(matrix)
-        self.text = "HELLO WORLD"
+        self.text = text
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         self.font = FONTS["7x13"]
         self.text_color = COLORS["white"]

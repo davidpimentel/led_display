@@ -153,3 +153,4 @@ cython_debug/
 log.txt
 pid
 .cache-*
+config.yml

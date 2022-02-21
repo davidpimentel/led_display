@@ -1,0 +1,7 @@
+screens:
+  hello_world:
+    display_name: Hello World
+    args:
+      text: Hello World!
+  color_test:
+    display_name: Color Test
