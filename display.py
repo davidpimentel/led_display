@@ -45,7 +45,7 @@ class Display:
         self.flask_app.run(host="0.0.0.0")
 
     def route_hello_world(self):
-        return render_template("index.html", screens=list(self.screens.keys()))
+        return render_template("index.html", screens=self.screens)
 
     def route_change_screen(self):
         screen_name = request.form["screen_name"]

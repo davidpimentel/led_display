@@ -18,11 +18,11 @@
   <!-- Startup Image  -->
   <link href="touch-icon-start-up-320x480.png" rel="apple-touch-startup-image" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/static/styles/w95.css" />
-    <link rel="stylesheet" href="/static/styles/app.css" />
-    <!-- <script src="/static/js/jquery.js" async></script> -->
-    <!-- <script src="/static/js/w95.js" async></script> -->
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/w95.css" />
+  <link rel="stylesheet" href="/static/styles/app.css" />
+  <!-- <script src="/static/js/jquery.js" async></script> -->
+  <!-- <script src="/static/js/w95.js" async></script> -->
 
   <!-- Styles -->
   <link rel="stylesheet" href="/static/styles/w95.css" />
@@ -30,30 +30,31 @@
   <script src="/static/js/jquery.js" async></script>
   <script src="/static/js/w95.js" async></script>
 
-  <body>
-    <!-- Grid of icons -->
-    <main>
-      <div class="app-grid">
-        {% for screen in screens %}
-        <div class="screen-launch">
-          <div class="app-icon"></div>
-          <p class="app-label">{{screen}}</p>
-        </div>
-        {% endfor %}
+<body>
+  <!-- Grid of icons -->
+  <main>
+    <div class="app-grid">
+      {% for screen_name in screens.keys(): %}
+      {% set screen = screens[screen_name] %}
+      <div class="screen-launch" data-screen="{{screen_name}}">
+        <div class="app-icon"></div>
+        <p class="app-label">{{screen.display_name}}</p>
       </div>
-    </main>
+      {% endfor %}
+    </div>
+  </main>
 
-    <footer>
-      <button class="btn btn-sm mr-2 mb-2 btn-primary" type="button">
-        <div class="start-icon">
-					<!-- <img src="/static/assets/my-computer.png" alt=""> -->
-				</div>
-        <span class="btn-text">Start</span>
-      </button>
-    </footer>
+  <footer>
+    <button class="btn btn-sm mr-2 mb-2 btn-primary" type="button">
+      <div class="start-icon">
+        <!-- <img src="/static/assets/my-computer.png" alt=""> -->
+      </div>
+      <span class="btn-text">Start</span>
+    </button>
+  </footer>
 
-    <!-- Start menu -->
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark justify-content-between">
+  <!-- Start menu -->
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark justify-content-between">
       <ul class="navbar-nav navbar-nav-hover flex-row align-items-center">
         <li class="nav-item">
           <a href="../index.html" class="nav-link" role="button">
@@ -66,8 +67,9 @@
       </div>
     </nav> -->
 
-    <!-- <form action="/turn_off_screen" method="post">
+  <!-- <form action="/turn_off_screen" method="post">
         <input type="submit" name="turn_off" value="Turn Off" />
       </form> -->
-  </body>
+</body>
+
 </html>
