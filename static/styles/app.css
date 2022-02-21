@@ -11,7 +11,7 @@ html {
   display: grid;
   grid-template-columns: 175px 175px;
   gap: 50px 0;
-  padding: 60px 10px 0 10px;
+  padding: 20px 10px 0 10px;
 }
 
 .app-label {
@@ -43,7 +43,7 @@ footer {
   bottom: 0;
   right: 0;
   left: 0;
-  padding: 8px 8px 8px 8px;
+  padding: 8px 8px 20px 8px;
   background-color: #c0c0c0;
 }
 

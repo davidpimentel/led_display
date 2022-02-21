@@ -1,22 +1,22 @@
 {
-  "name": "Tidbyt",
-  "short_name": "Tidbyt",
+  "name": "My Computer",
+  "short_name": "My Computer",
   "start_url": "/",
   "scope": "./",
   "icons": [
     {
-      "src": "assets/pwa_icon_small.png",
-      "sizes": "192x192",
+      "src": "/static/assets/pwa-small.png",
+      "sizes": "152x152",
       "type": "image/png"
     },
     {
-      "src": "assets/pwa_icon_large.png",
-      "sizes": "512x512",
+      "src": "assets/pwa-large.png",
+      "sizes": "220x220",
       "type": "image/png"
     }
   ],
   "orientation": "portrait",
   "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "theme_color": "#008282",
+  "background_color": "#008282"
 }
