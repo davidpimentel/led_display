@@ -10,8 +10,8 @@ from rgbmatrix import graphics
 from ..base_screen import BaseScreen
 
 
-class Citibike(BaseScreen):
-    def __init__(self, matrix):
+class Screen(BaseScreen):
+    def __init__(self, matrix, station_id=None, station_name=None):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         self.font = FONTS["4x6"]
@@ -19,6 +19,10 @@ class Citibike(BaseScreen):
         self.green = COLORS["green"]
         self.bike = Image.open("./images/bike.png")
         self.ebike = Image.open("./images/ebike.png")
+
+        self.station_id = station_id
+        self.station_name = station_name
+        print(type(self.station_id))
 
     def delay_seconds(self):
         return 30
@@ -31,13 +35,6 @@ class Citibike(BaseScreen):
         return 61 - len(char) * 4
 
     def render(self):
-        # station_id = "432"  # A and 7th
-        # station_id = "3101"  # bedford
-        station_id = "3108"  # Nassau
-
-        # station_name = None
-        station_name = "Nassau Ave"
-
         response = request.urlopen(
             "https://gbfs.citibikenyc.com/gbfs/es/station_status.json"
         )
@@ -45,13 +42,13 @@ class Citibike(BaseScreen):
         list = json.loads(response.read())["data"]["stations"]
 
         station_status = next(
-            (status for status in list if status["station_id"] == station_id), None
+            (status for status in list if status["station_id"] == self.station_id), None
         )
 
         num_bikes = str(station_status["num_bikes_available"])
         num_ebikes = str(station_status["num_ebikes_available"])
 
-        if not station_name:
+        if not self.station_name:
             response = request.urlopen(
                 "https://gbfs.citibikenyc.com/gbfs/es/station_information.json"
             )
@@ -59,10 +56,10 @@ class Citibike(BaseScreen):
             list = json.loads(response.read())["data"]["stations"]
 
             station_info = next(
-                (status for status in list if status["station_id"] == station_id), None
+                (status for status in list if status["station_id"] == self.station_id), None
             )
 
-            station_name = station_info["name"].replace("Avenue", "Ave")
+            self.station_name = station_info["name"].replace("Avenue", "Ave")
 
         self.offscreen_canvas.Clear()
 
@@ -75,7 +72,7 @@ class Citibike(BaseScreen):
         )
 
         graphics.DrawText(
-            self.offscreen_canvas, self.font, 2, 7, self.white, station_name.upper()
+            self.offscreen_canvas, self.font, 2, 7, self.white, self.station_name.upper()
         )
 
         graphics.DrawText(

@@ -15,3 +15,8 @@ screens:
     display_name: Who Chooses
   citibike:
     display_name: Citibike
+    args:
+      # station_id: "432"  # A and 7th
+      # station_id: "3101"  # bedford
+      station_id: "3108"  # Nassau
+      station_name: Nassau Ave

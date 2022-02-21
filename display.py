@@ -67,7 +67,9 @@ class Display:
       return send_from_directory('templates', 'manifest.json')
 
     def load_screen(self, screen_name):
-      self.screen = importlib.import_module("screens." + screen_name).Screen(self.matrix)
+      screen_dict = self.screens[screen_name]
+      kwargs = screen_dict.get("args", {})
+      self.screen = importlib.import_module("screens." + screen_name).Screen(self.matrix, **kwargs)
 
 
 sentry_sdk.init(
