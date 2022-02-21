@@ -6,7 +6,6 @@ from lib.fonts import FONTS
 from num2words import num2words
 from PIL import Image
 from rgbmatrix import graphics
-
 from screens.base_screen import BaseScreen
 
 
@@ -24,8 +23,11 @@ class Screen(BaseScreen):
     def get_current_hours_minutes(self):
         current_datetime = datetime.now(tz=self.timezone)
         hour = current_datetime.hour
-        if hour > 12:
+        if hour == 0:
+          hour = 12
+        elif hour > 12:
           hour -= 12
+
         return (hour, current_datetime.minute)
 
     def hours_minutes_to_words(self, hours_minutes):
