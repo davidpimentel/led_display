@@ -1,6 +1,6 @@
 ## Authentication
 Before you can use this module you need to authenticate manually once.
-In a venv, run `python scripts/spotify_auth.py --user [username]`
+In a venv, run `python screens/spotify/scripts/spotify_auth.py --user [username]`
 
 
 ## Configuration
