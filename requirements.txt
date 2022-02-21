@@ -9,3 +9,4 @@ num2words==0.5.10
 spotipy==2.19.0
 python-dotenv==0.19.2
 pyYAML==6.0
+adafruit-io==2.6.0

@@ -3,75 +3,63 @@ import importlib
 import sentry_sdk
 import yaml
 from dotenv import load_dotenv
-from flask import (Flask, redirect, render_template, request,
-                   send_from_directory)
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
+
+from flask_app import FlaskApp
+from lib.mqtt.adafruit_mqtt_client import AdafruitMQTTClient
 
 
 class Display:
-    def __init__(self):
-        # Configuration for the matrix
-        options = RGBMatrixOptions()
-        options.rows = 32
-        options.cols = 64
-        options.chain_length = 1
-        options.parallel = 1
-        options.hardware_mapping = "adafruit-hat-pwm"
-        self.matrix = RGBMatrix(options=options)
+  def __init__(self):
+    # Configuration for the matrix
+    options = RGBMatrixOptions()
+    options.rows = 32
+    options.cols = 64
+    options.chain_length = 1
+    options.parallel = 1
+    options.hardware_mapping = "adafruit-hat-pwm"
+    self.matrix = RGBMatrix(options=options)
 
-        # Flask app
-        self.flask_app = Flask(__name__)
-        self.flask_app.route("/")(self.route_hello_world)
-        self.flask_app.route("/change_screen", methods=["POST"])(
-            self.route_change_screen
-        )
+    # Config/ Screen loading
+    with open("config.yml", "r") as config_file:
+      config = yaml.safe_load(config_file)
 
-        self.flask_app.route("/turn_off_screen", methods=["POST"])(
-            self.route_turn_off_screen
-        )
-        self.flask_app.route("/manifest.json")(self.route_pwa_manfiest)
+    self.screens = config["screens"]
 
-        # Config/ Screen loading
-        with open("config.yml", "r") as config_file:
-            config = yaml.safe_load(config_file)
+    # pick the first screen in the dict to start
+    self.load_screen(next(iter(self.screens)))
 
-        self.screens = config["screens"]
+    self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
 
-        # pick the first screen in the dict to start
-        self.load_screen(next(iter(self.screens)))
+    self.flask_app = FlaskApp(
+      screens=self.screens,
+      on_change_screen=self.change_screen,
+      on_turn_off_screen=self.turn_off_screen
+    )
 
-    def run(self):
-        self.screen.start()
-        self.flask_app.run(host="0.0.0.0", port="3000")
+  def run(self):
+    self.adafruit_mqtt_client.start()
+    self.screen.start()
+    self.flask_app.start()
 
-    def route_hello_world(self):
-        return render_template("index.html", screens=self.screens)
+  def change_screen(self, screen_name):
+    if self.screen:
+      self.screen.stop()
 
-    def route_change_screen(self):
-        screen_name = request.form["screen_name"]
-        if self.screen:
-            self.screen.stop()
+    self.load_screen(screen_name)
+    self.screen.start()
 
-        self.load_screen(screen_name)
-        self.screen.start()
-        return redirect("/")
+  def turn_off_screen(self):
+    if self.screen:
+      self.screen.stop()
+      self.screen = None
 
-    def route_turn_off_screen(self):
-        if self.screen:
-            self.screen.stop()
-            self.screen = None
-
-        return redirect("/")
-
-    def route_pwa_manfiest(self):
-        return send_from_directory("templates", "manifest.json")
-
-    def load_screen(self, screen_name):
-        screen_dict = self.screens[screen_name]
-        kwargs = screen_dict.get("args", {})
-        self.screen = importlib.import_module("screens." + screen_name).Screen(
-            self.matrix, **kwargs
-        )
+  def load_screen(self, screen_name):
+    screen_dict = self.screens[screen_name]
+    kwargs = screen_dict.get("args", {})
+    self.screen = importlib.import_module("screens." + screen_name).Screen(
+        self.matrix, **kwargs
+    )
 
 
 sentry_sdk.init(
