@@ -14,7 +14,7 @@ class Screen(BaseScreen):
     def __init__(self, matrix, station_id=None, station_name=None):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
-        self.font = FONTS["4x6"]
+        self.font = FONTS["5x8"]
         self.white = COLORS["white"]
         self.green = COLORS["green"]
         self.bike = Image.open("./images/bike.png")
@@ -63,7 +63,7 @@ class Screen(BaseScreen):
 
         self.offscreen_canvas.Clear()
 
-        self.offscreen_canvas.SetImage(self.bike.convert("RGB"), offset_x=6, offset_y=9)
+        self.offscreen_canvas.SetImage(self.bike.convert("RGB"), offset_x=3, offset_y=10)
 
         self.offscreen_canvas.SetImage(
             self.ebike.convert("RGB"),
