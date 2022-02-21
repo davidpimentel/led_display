@@ -63,17 +63,19 @@
   <body>
     <!-- Grid of icons -->
     <main>
-      <div class="app-grid">
+      <form class="app-grid" action="/change_screen" method="POST">
         {% for screen_name in screens.keys(): %} {% set screen =
         screens[screen_name] %}
-        <div class="screen-launch" data-screen="{{screen_name}}">
-          <div class="app-icon" data-screen="{{screen_name}}"></div>
-          <p class="app-label" data-screen="{{screen_name}}">
-            {{screen.display_name}}
-          </p>
-        </div>
+        <button
+          class="screen-launch"
+          name="screen_name"
+          value="{{screen_name}}"
+        >
+          <div class="app-icon"></div>
+          <p class="app-label">{{screen.display_name}}</p>
+        </button>
         {% endfor %}
-      </div>
+      </form>
     </main>
 
     <!-- Start Menu -->
@@ -85,33 +87,5 @@
 
       <div class="clock">12:21PM</div>
     </footer>
-
-    <script>
-      (function () {
-        const screenLaunchIcons = document.querySelectorAll(".screen-launch");
-
-        screenLaunchIcons.forEach((el) => {
-          el.addEventListener("click", (e) => {
-            const screenName = e.target.getAttribute("data-screen");
-
-            if (!screenName) {
-              return false;
-            }
-
-            const formData = new FormData();
-            formData.append("screen_name", screenName);
-
-            debugger;
-            fetch("/change_screen", {
-              method: "post",
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-              body: formData,
-            });
-          });
-        });
-      })();
-    </script>
   </body>
 </html>
