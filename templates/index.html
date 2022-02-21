@@ -81,7 +81,10 @@
           name="screen_name"
           value="{{screen_name}}"
         >
-          <div class="app-icon"></div>
+          <div
+            class="app-icon"
+            style="background-image: url('/static/assets/screens/{{screen.icon}}');"
+          ></div>
           <p class="app-label">{{screen.display_name}}</p>
         </button>
         {% endfor %}

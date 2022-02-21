@@ -33,7 +33,6 @@ html {
   width: 50px;
   height: 50px;
   background-size: contain;
-  background-image: url("/static/assets/my-computer.png");
 }
 
 footer {

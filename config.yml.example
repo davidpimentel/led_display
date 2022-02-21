@@ -1,7 +1,24 @@
 screens:
   hello_world:
+    icon: my-computer.png
     display_name: Hello World
     args:
       text: Hello World!
   color_test:
+    icon: color-test.png
     display_name: Color Test
+  subway_times:
+    icon: mta.png
+    display_name: Subway
+  citibike:
+    icon: my-computer.png
+    display_name: Citibike
+  whos_home:
+    icon: my-computer.png
+    display_name: Who's Home
+  world_clock:
+    icon: clock.png
+    display_name: Clock
+  spotify:
+    icon: spotify.png
+    display_name: Spotify
