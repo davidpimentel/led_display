@@ -1,23 +1,56 @@
 @font-face {
   font-family: ms-sans;
-  src: url("/static/fonts/ms-sans-serif.ttf");
+  src: url("/static/fonts/ms-sans-serif.ttf") format("truetype");
 }
 
 body {
   font-family: ms-sans;
 }
 
-.change-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.app-grid {
+  display: grid;
+  grid-template-columns: 175px 175px;
+  gap: 10px 20px;
 }
 
-.change-screen .screen-selection {
-  margin-block-end: 1rem;
-  width: 20rem;
+.app-label {
+  font-size: 1rem;
+  margin: 0;
+  margin-top: 0.4rem;
 }
 
-.screen-selection button {
+.screen-launch {
+  padding: 0.55rem;
+}
+
+.app-icon {
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-image: url("/static/assets/my-computer.png");
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
   width: 100%;
+  height: 60px;
+  background-color: #c0c0c0;
+}
+
+.start-icon {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  background-image: url("/static/assets/start-icon.svg");
+  background-size: contain;
+}
+
+footer button {
+  max-height: 60px !important;
+  height: 60px !important;
+  padding: 0 !important;
+  width: 70px;
 }

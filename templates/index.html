@@ -18,10 +18,11 @@
   <!-- Startup Image  -->
   <link href="touch-icon-start-up-320x480.png" rel="apple-touch-startup-image" />
 
-  <!-- Icons -->
-  <link rel="apple-touch-icon" href="/static/assets/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/assets/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/static/assets/favicon-16x16.png" />
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/styles/w95.css" />
+    <link rel="stylesheet" href="/static/styles/app.css" />
+    <!-- <script src="/static/js/jquery.js" async></script> -->
+    <!-- <script src="/static/js/w95.js" async></script> -->
 
   <!-- Styles -->
   <link rel="stylesheet" href="/static/styles/w95.css" />
@@ -29,26 +30,42 @@
   <script src="/static/js/jquery.js" async></script>
   <script src="/static/js/w95.js" async></script>
 
-  <title>Tidbyt</title>
-</head>
-
-<body>
-  <form class="change-screen" action="/change_screen" method="post">
-    {% for screen in screens %}
-    <div class="screen-selection">
-      <div>
-        <i>Icon</i>
+  <body>
+    <!-- Grid of icons -->
+    <main>
+      <div class="app-grid">
+        {% for screen in screens %}
+        <div class="screen-launch">
+          <div class="app-icon"></div>
+          <p class="app-label">{{screen}}</p>
+        </div>
+        {% endfor %}
       </div>
+    </main>
 
-      <button name="screen_name" value="{{screen}}" class="btn mr-2 mb-2 btn-lg btn-primary">
-        <span class="btn-text">{{screen}}</span>
+    <footer>
+      <button class="btn btn-sm mr-2 mb-2 btn-primary" type="button">
+        <div class="start-icon"></div>
+        <span class="btn-text">Start</span>
       </button>
-    </div>
-    {% endfor %}
-  </form>
-  <form action="/turn_off_screen" method="post">
-    <input type="submit" name="turn_off" value="Turn Off" class="btn mr-2 mb-2 btn-lg btn-primary" />
-  </form>
-</body>
+    </footer>
 
+    <!-- Start menu -->
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark justify-content-between">
+      <ul class="navbar-nav navbar-nav-hover flex-row align-items-center">
+        <li class="nav-item">
+          <a href="../index.html" class="nav-link" role="button">
+            <span class="nav-link-inner-text">📺 Start</span>
+          </a>
+        </li>
+      </ul>
+      <div class="time text-center">
+        <span class="time text-uppercase">1:47 PM</span>
+      </div>
+    </nav> -->
+
+    <!-- <form action="/turn_off_screen" method="post">
+        <input type="submit" name="turn_off" value="Turn Off" />
+      </form> -->
+  </body>
 </html>
