@@ -66,5 +66,10 @@ footer {
 }
 
 .clock {
-  line-height: 50px;
+  line-height: 48px;
+  font-size: 15px;
+  box-shadow: inset -2px -2px 0px #f0f0f0, inset 2px 2px 0px #7e7e7e;
+  width: 100px;
+  height: 48px;
+  text-align: center;
 }
