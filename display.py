@@ -1,4 +1,5 @@
 import importlib
+import os
 
 import sentry_sdk
 import yaml
@@ -29,7 +30,8 @@ class Display:
     # pick the first screen in the dict to start
     self.load_screen(next(iter(self.screens)))
 
-    self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
+    if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
+      self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
 
     self.flask_app = FlaskApp(
       screens=self.screens,
@@ -38,7 +40,8 @@ class Display:
     )
 
   def run(self):
-    self.adafruit_mqtt_client.start()
+    if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
+      self.adafruit_mqtt_client.start()
     self.screen.start()
     self.flask_app.start()
 
