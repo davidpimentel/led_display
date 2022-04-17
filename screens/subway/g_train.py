@@ -19,10 +19,10 @@ class GTrain(BaseScreen):
         self.clockColor = COLORS["yellow"]
         self.lineColor = COLORS["grey"]
 
-    def render_delay(self):
+    def animation_delay(self):
         return 30
 
-    def render(self):
+    def render(self, data):
         self.offscreen_canvas.Clear()
 
         trip = SubwayTimes(train="G")

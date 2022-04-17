@@ -17,7 +17,7 @@ class Screen(BaseScreen):
         self.timezone = pytz.timezone('US/Eastern')
         self.font = FONTS["6x9"]
 
-    def render_delay(self):
+    def animation_delay(self):
         return 1
 
     def get_current_hours_minutes(self):
@@ -43,7 +43,7 @@ class Screen(BaseScreen):
       minutes_words = minutes_words.replace('-', ' ')
       return (hours_words + " " + minutes_words).upper()
 
-    def render(self):
+    def render(self, data):
       current_hours_minutes = self.get_current_hours_minutes()
       if self.last_rendered_hours_minutes == None or self.last_rendered_hours_minutes != current_hours_minutes:
         self.last_rendered_hours_minutes = current_hours_minutes

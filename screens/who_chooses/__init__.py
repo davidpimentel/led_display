@@ -17,10 +17,10 @@ class Screen(BaseScreen):
         self.green = COLORS["green"]
         self.teal = COLORS["teal"]
 
-    def render_delay(self):
+    def animation_delay(self):
         return 100
 
-    def render(self):
+    def render(self, data):
         self.matrix.Clear()
         images = [
             (Image.open("images/dave.png"), "DAVE", self.green),

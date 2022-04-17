@@ -24,7 +24,7 @@ class Screen(BaseScreen):
         self.station_name = station_name
         print(type(self.station_id))
 
-    def render_delay(self):
+    def animation_delay(self):
         return 30
 
     def get_color_for_range(self, count):
@@ -34,7 +34,7 @@ class Screen(BaseScreen):
     def text_offset(self, char):
         return 61 - len(char) * 4
 
-    def render(self):
+    def render(self, data):
         response = request.urlopen(
             "https://gbfs.citibikenyc.com/gbfs/es/station_status.json"
         )

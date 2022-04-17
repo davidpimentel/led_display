@@ -23,10 +23,10 @@ class Screen(BaseScreen):
         self.current_song_id = None
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
 
-    def render_delay(self):
+    def animation_delay(self):
         return 3
 
-    def render(self):
+    def render(self, data):
       self.offscreen_canvas.Clear()
       currently_playing = self.sp.currently_playing()
 

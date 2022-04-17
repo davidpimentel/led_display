@@ -11,10 +11,10 @@ class Screen(BaseScreen):
         self.green = 0
         self.blue = 0
 
-    def render_delay(self):
+    def animation_delay(self):
         return 3
 
-    def render(self):
+    def render(self, data):
       for x in range(0, self.offscreen_canvas.width):
         for y in range(0, self.offscreen_canvas.height):
           self.offscreen_canvas.SetPixel(x, y, self.red, self.green, self.blue)

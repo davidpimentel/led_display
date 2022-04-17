@@ -18,14 +18,14 @@ class Screen(BaseScreen):
         self.white = COLORS["white"]
         self.green = COLORS["green"]
 
-    def render_delay(self):
+    def animation_delay(self):
         return 30
 
     def get_color_for_range(self, count):
         if count < 100:
             return self.green
 
-    def render(self):
+    def render(self, data):
         people_at_gym = str(
             subprocess.check_output(
                 [

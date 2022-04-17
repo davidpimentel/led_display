@@ -17,3 +17,15 @@ class TextScroller:
         if self.position_x + len < 0:
             self.position_x = canvas.width
 
+
+def right_align_text(canvas=None, text=None, font=None, font_color=None, y=0, padding=0):
+    width = 0
+    for character in bytearray(text.encode('utf-8')):
+        width += font.CharacterWidth(character)
+
+    width += padding
+    x = canvas.width - width
+
+    graphics.DrawText(
+                canvas, font, x, y, font_color, text
+            )

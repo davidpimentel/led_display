@@ -35,11 +35,11 @@ class BaseScreen(Thread):
         return self.data_thread is not None and self.data_thread.is_alive()
 
     def run_render(self):
-        if self.render_delay() is not None and (not self.last_render_time or (time.time() - self.last_render_time) > self.render_delay()):
+        if self.animation_delay() is not None and (not self.last_render_time or (time.time() - self.last_render_time) > self.animation_delay()):
             self.should_render = True
 
         if self.should_render:
-            self.render()
+            self.render(self.get_data())
             self.last_render_time = time.time()
             self.should_render = False
 
@@ -69,8 +69,8 @@ class BaseScreen(Thread):
     def fetch_data_delay(self):
         return None
 
-    def render(self):
+    def render(self, data):
         raise Exception("render() not implemented")
 
-    def render_delay(self):
+    def animation_delay(self):
         return None
