@@ -10,3 +10,5 @@ spotipy==2.19.0
 python-dotenv==0.19.2
 pyYAML==6.0
 adafruit-io==2.6.0
+pep8==1.7.1
+pylint==2.13.5

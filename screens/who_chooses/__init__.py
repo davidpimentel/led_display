@@ -32,10 +32,10 @@ class Screen(BaseScreen):
         graphics.DrawText(
             self.matrix, self.font, 0, self.font_height, self.white, "YOU"
         )
-        len = graphics.DrawText(
+        length = graphics.DrawText(
             self.matrix, self.font, 0, (self.font_height * 2), self.white, "CHOOSE:"
         )
         graphics.DrawText(
             self.matrix, self.font, 0, (self.font_height * 3), name_color, name
         )
-        self.matrix.SetImage(image.convert("RGB"), len + 1, 0)
+        self.matrix.SetImage(image.convert("RGB"), length + 1, 0)

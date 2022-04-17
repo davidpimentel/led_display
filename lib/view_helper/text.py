@@ -10,11 +10,11 @@ class TextScroller:
         self.text_color = text_color
 
     def scroll_text(self, canvas):
-        len = graphics.DrawText(
+        length = graphics.DrawText(
             canvas, self.font, self.position_x, self.position_y, self.text_color, self.text
         )
         self.position_x -= 1
-        if self.position_x + len < 0:
+        if self.position_x + length < 0:
             self.position_x = canvas.width
 
 
