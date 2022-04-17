@@ -24,7 +24,7 @@ class Screen(BaseScreen):
         self.station_name = station_name
         print(type(self.station_id))
 
-    def delay_seconds(self):
+    def render_delay(self):
         return 30
 
     def get_color_for_range(self, count):

@@ -17,7 +17,7 @@ class Screen(BaseScreen):
         self.timezone = pytz.timezone('US/Eastern')
         self.font = FONTS["6x9"]
 
-    def delay_seconds(self):
+    def render_delay(self):
         return 1
 
     def get_current_hours_minutes(self):

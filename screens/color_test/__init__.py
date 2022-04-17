@@ -11,7 +11,7 @@ class Screen(BaseScreen):
         self.green = 0
         self.blue = 0
 
-    def delay_seconds(self):
+    def render_delay(self):
         return 3
 
     def render(self):

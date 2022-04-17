@@ -17,7 +17,7 @@ class Screen(BaseScreen):
         self.green = COLORS["green"]
         self.teal = COLORS["teal"]
 
-    def delay_seconds(self):
+    def render_delay(self):
         return 100
 
     def render(self):

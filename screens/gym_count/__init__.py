@@ -3,9 +3,9 @@ import subprocess
 
 from lib.colors import COLORS
 from lib.fonts import FONTS
+from lib.weather import get_current_weather
 from PIL import Image
 from rgbmatrix import graphics
-
 from screens.base_screen import BaseScreen
 
 
@@ -18,7 +18,7 @@ class Screen(BaseScreen):
         self.white = COLORS["white"]
         self.green = COLORS["green"]
 
-    def delay_seconds(self):
+    def render_delay(self):
         return 30
 
     def get_color_for_range(self, count):
@@ -35,15 +35,7 @@ class Screen(BaseScreen):
                 ]
             ).decode("utf-8")
         )
-        weather = json.loads(
-            subprocess.check_output(
-                [
-                    "curl",
-                    "--silent",
-                    "api.openweathermap.org/data/2.5/weather?q=Brooklyn&appid=96d91031ccf9c0f23cabe15440f20be0&units=imperial",
-                ]
-            ).decode("utf-8")
-        )
+        weather = get_current_weather()
         feels_like_temp = str(int(weather["main"]["feels_like"]))
         self.offscreen_canvas.Clear()
 

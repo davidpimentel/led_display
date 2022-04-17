@@ -14,7 +14,7 @@ class Screen(BaseScreen):
         self.text_color = COLORS["white"]
         self.text_scroller = TextScroller(self.text, self.offscreen_canvas.width, 10, self.font, self.text_color)
 
-    def delay_seconds(self):
+    def render_delay(self):
         return 0.05
 
     def render(self):

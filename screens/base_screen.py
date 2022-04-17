@@ -25,7 +25,7 @@ class BaseScreen(Thread):
         self.matrix.Clear()
 
     def run_data(self):
-        if self.fetch_data_delay_seconds() is not None and not self.is_data_thread_running() and (not self.last_data_time or (time.time() - self.last_data_time) > self.fetch_data_delay_seconds()):
+        if self.fetch_data_delay() is not None and not self.is_data_thread_running() and (not self.last_data_time or (time.time() - self.last_data_time) > self.fetch_data_delay()):
             self.last_data_time = time.time()
             self.data_thread = Thread(target=self.fetch_data, daemon=True)
             self.data_thread.start()
@@ -34,7 +34,7 @@ class BaseScreen(Thread):
         return self.data_thread is not None and self.data_thread.is_alive()
 
     def run_render(self):
-        if not self.last_render_time or (time.time() - self.last_render_time) > self.delay_seconds():
+        if not self.last_render_time or (time.time() - self.last_render_time) > self.render_delay():
               self.render()
               self.last_render_time = time.time()
 
@@ -55,11 +55,11 @@ class BaseScreen(Thread):
         pass
         print("fetch data")
 
-    def fetch_data_delay_seconds(self):
+    def fetch_data_delay(self):
         return None
 
     def render(self):
         raise Exception("render() not implemented")
 
-    def delay_seconds(self):
+    def render_delay(self):
         raise Exception("delay_seconds() not implemented")
