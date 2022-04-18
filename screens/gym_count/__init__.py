@@ -35,7 +35,7 @@ class Screen(BaseScreen):
                 ]
             ).decode("utf-8")
         )
-        weather = get_current_weather()
+        weather = get_current_weather("40.722518", "-73.954734") # Vital location
         feels_like_temp = str(int(weather["main"]["feels_like"]))
         self.offscreen_canvas.Clear()
 

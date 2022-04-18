@@ -57,8 +57,7 @@ class BaseScreen(Thread):
         return return_data
 
     def run_fetch_data(self):
-        data = self.fetch_data()
-        self.set_data(data)
+        self.set_data(self.fetch_data())
 
 
     # Methods to override in subclass
