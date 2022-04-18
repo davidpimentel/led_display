@@ -6,26 +6,34 @@ from apscheduler.triggers.cron import CronTrigger
 
 
 class Scheduler(Thread):
-    def __init__(self, on_change_screen=None):
+    def __init__(self, schedule, on_change_screen=None):
         super().__init__()
         self.on_change_screen = on_change_screen
         self.daemon = True
+        self.schedule = schedule
 
-        self.scheduler = BackgroundScheduler()
-        # self.scheduler.add_job(self.change_screen, CronTrigger.from_crontab('* 7-10 * * 0,2,4k'))
-        self.scheduler.add_job(self.change_screen, CronTrigger.from_crontab('* * * * 0,2,4'))
-        self.screens = ["weather", "gym_count", "clock"]
-        self.idx = 0
+        self.scheduler = BackgroundScheduler({"apscheduler.timezone": "US/Eastern"})
+        self.load_schedule()
+
+    def load_schedule(self):
+        for schedule in self.schedule:
+            screens = schedule["screens"]
+            cron = schedule["cron"]
+            scheduled_job = ScheduledJob(screens, self.on_change_screen)
+            self.scheduler.add_job(scheduled_job.change_screen, CronTrigger.from_crontab(cron), coalesce=True)
 
     def run(self):
-        print("starting scheduler")
-        print(self.scheduler.get_jobs())
         self.scheduler.start()
         while True: # TODO make cancelable
             time.sleep(1)
 
+
+class ScheduledJob:
+    def __init__(self, screens, on_change_screen):
+        self.screens = screens
+        self.on_change_screen = on_change_screen
+        self.idx = 0
+
     def change_screen(self):
         self.on_change_screen(self.screens[self.idx])
         self.idx = (self.idx + 1) % len(self.screens)
-
-

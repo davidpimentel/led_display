@@ -35,7 +35,10 @@ class Display:
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
             self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
 
-        self.scheduler = Scheduler(on_change_screen=self.change_screen)
+        self.scheduler = None
+        if config.get("schedule"):
+            self.scheduler = Scheduler(config["schedule"], on_change_screen=self.change_screen)
+
         self.flask_app = FlaskApp(
             screens=self.screens,
             on_change_screen=self.change_screen,
@@ -46,7 +49,7 @@ class Display:
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
             self.adafruit_mqtt_client.start()
         self.screen.start()
-        # self.scheduler.start()
+        self.scheduler.start() if self.scheduler else None
         self.flask_app.start()
 
     def change_screen(self, screen_name):
