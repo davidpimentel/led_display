@@ -13,10 +13,15 @@ class Screen(BaseScreen):
     def __init__(self, matrix):
         super().__init__(matrix)
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
-        self.last_rendered_hours_minutes = None
         self.timezone = pytz.timezone('US/Eastern')
         self.font = FONTS["6x9"]
 
+
+    def fetch_data(self):
+        return self.get_current_hours_minutes()
+
+    def fetch_data_delay(self):
+        return 1
 
     def get_current_hours_minutes(self):
         current_datetime = datetime.now(tz=self.timezone)
@@ -42,21 +47,20 @@ class Screen(BaseScreen):
         return (hours_words + " " + minutes_words).upper()
 
     def render(self, data):
-        current_hours_minutes = self.get_current_hours_minutes()
-        if self.last_rendered_hours_minutes is None or self.last_rendered_hours_minutes != current_hours_minutes:
-            self.last_rendered_hours_minutes = current_hours_minutes
-            self.offscreen_canvas.Clear()
+        current_hours_minutes = data
+        self.last_rendered_hours_minutes = current_hours_minutes
+        self.offscreen_canvas.Clear()
 
-            time_in_words = self.hours_minutes_to_words(current_hours_minutes)
+        time_in_words = self.hours_minutes_to_words(current_hours_minutes)
 
-            for i, word in enumerate(time_in_words.split(" ")):
-                graphics.DrawText(
-                    self.offscreen_canvas,
-                    self.font,
-                    3,
-                    10 + i * 9,
-                    COLORS["white"],
-                    word
-                )
+        for i, word in enumerate(time_in_words.split(" ")):
+            graphics.DrawText(
+                self.offscreen_canvas,
+                self.font,
+                3,
+                10 + i * 9,
+                COLORS["white"],
+                word
+            )
 
         self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)

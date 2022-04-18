@@ -8,7 +8,7 @@ Install dependencies from within a venv
 pip install -r requirements.txt
 ```
 
-Create a `config.yml` file to specify what modules you want to run
+Create a `config.yml` file to specify what modules you want to run (look at `config.yml.example`)
 
 ## Running
 start the program by running `./run`, stop the program by running `./stop`
