@@ -13,6 +13,17 @@ Create a `config.yml` file to specify what modules you want to run (look at `con
 ## Running
 start the program by running `./run`, stop the program by running `./stop`
 
+## Setting up Systemctl
+
+```
+cd /etc/systemd/system
+sudo ln -s /home/pi/display/led-display/service
+sudo systemctl enable led-display
+sudo reboot
+```
+
+The display should start at boot now
+
 ## Enable MQTT support
 - Create an account at io.adafruit.com. go to Feeds > view all.
 - Create a new group called `LED Display`

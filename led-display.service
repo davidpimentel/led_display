@@ -1,0 +1,10 @@
+[Unit]
+Description=LED Display
+
+[Service]
+WorkingDirectory=/home/pi/display
+ExecStart=sudo -E /home/pi/display/venv/bin/python display.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
