@@ -21,7 +21,7 @@ class Display:
         self.screen_manager = ScreenManager()
         self.screen = None
         self.screens = config["screens"]
-        self.load_screen(next(iter(self.screens))) # pick the first screen in the dict to start
+        self.load_screen(self.screens[0]["id"]) # pick the first screen in the dict to start
 
         # Pub/Sub
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
@@ -50,15 +50,16 @@ class Display:
 
         self.flask_app.start()
 
-    def change_screen(self, screen_name):
-        self.load_screen(screen_name)
+    def change_screen(self, screen_id):
+        self.load_screen(screen_id)
 
     def turn_off_screen(self):
         self.screen.set_screen(None)
         self.screen = None
 
-    def load_screen(self, screen_name):
-        screen_dict = self.screens[screen_name]
+    def load_screen(self, screen_id):
+        screen_dict = next((screen for screen in self.screens if screen["id"] == screen_id))
+        screen_name = screen_dict["screen_name"]
         kwargs = screen_dict.get("args", {})
         self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
         self.screen_manager.set_screen(self.screen)

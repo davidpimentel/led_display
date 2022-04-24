@@ -1,58 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
-    />
 
-    <!-- Favicon -->
-    <link
-      href="/static/assets/favicon-16x16.png"
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-    />
-    <link
-      href="/static/assets/favicon-32x32.png"
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 
-    <!-- PWA Tags -->
+  <!-- Favicon -->
+  <link href="/static/assets/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
+  <link href="/static/assets/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32" />
 
-    <link rel="manifest" href="manifest.json" />
+  <!-- PWA Tags -->
 
-    <!-- iOS -->
-    <meta name="apple-mobile-web-app-title" content="My Computer" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+  <link rel="manifest" href="manifest.json" />
 
-    <link href="/static/assets/apple-touch-icon.png" rel="apple-touch-icon" />
-    <link
-      href="/static/assets/apple-touch-120x120.png"
-      rel="apple-touch-icon"
-      sizes="120x120"
-    />
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-title" content="My Computer" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- Startup Image  -->
-    <link
-      href="touch-icon-start-up-320x480.png"
-      rel="apple-touch-startup-image"
-    />
+  <link href="/static/assets/apple-touch-icon.png" rel="apple-touch-icon" />
+  <link href="/static/assets/apple-touch-120x120.png" rel="apple-touch-icon" sizes="120x120" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/static/styles/w95.css" />
-    <link rel="stylesheet" href="/static/styles/app.css" />
+  <!-- Startup Image  -->
+  <link href="touch-icon-start-up-320x480.png" rel="apple-touch-startup-image" />
 
-    <!-- Fonts -->
-    <!-- <link
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/w95.css" />
+  <link rel="stylesheet" href="/static/styles/app.css" />
+
+  <!-- Fonts -->
+  <!-- <link
       rel="preload"
       href="/static/fonts/VT323/VT323-Regular.woff2"
       as="font"
@@ -60,45 +38,38 @@
       crossorigin
     /> -->
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/static/styles/w95.css" />
-    <link rel="stylesheet" href="/static/styles/app.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/w95.css" />
+  <link rel="stylesheet" href="/static/styles/app.css" />
 
-    <!-- Scripts -->
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/jquery-ui.min.js"></script>
-    <script src="/static/js/w95.js" async></script>
-  </head>
+  <!-- Scripts -->
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/jquery-ui.min.js"></script>
+  <script src="/static/js/w95.js" async></script>
+</head>
 
-  <body>
-    <!-- Grid of icons -->
-    <main>
-      <form class="app-grid" action="/change_screen" method="POST">
-        {% for screen_name in screens.keys(): %} {% set screen =
-        screens[screen_name] %}
-        <button
-          class="screen-launch"
-          name="screen_name"
-          value="{{screen_name}}"
-        >
-          <div
-            class="app-icon"
-            style="background-image: url('/static/assets/screens/{{screen.icon}}');"
-          ></div>
-          <p class="app-label">{{screen.display_name}}</p>
-        </button>
-        {% endfor %}
-      </form>
-    </main>
-
-    <!-- Start Menu -->
-    <footer>
-      <button class="btn btn-sm mr-2 mb-2 btn-primary start-btn" type="button">
-        <div class="start-icon"></div>
-        <div>Start</div>
+<body>
+  <!-- Grid of icons -->
+  <main>
+    <form class="app-grid" action="/change_screen" method="POST">
+      {% for screen in screens: %}
+      <button class="screen-launch" name="screen_id" value="{{screen.id}}">
+        <div class="app-icon" style="background-image: url('/static/assets/screens/{{screen.icon}}');"></div>
+        <p class="app-label">{{screen.display_name}}</p>
       </button>
+      {% endfor %}
+    </form>
+  </main>
 
-      <div class="clock">01:57PM</div>
-    </footer>
-  </body>
+  <!-- Start Menu -->
+  <footer>
+    <button class="btn btn-sm mr-2 mb-2 btn-primary start-btn" type="button">
+      <div class="start-icon"></div>
+      <div>Start</div>
+    </button>
+
+    <div class="clock">01:57PM</div>
+  </footer>
+</body>
+
 </html>

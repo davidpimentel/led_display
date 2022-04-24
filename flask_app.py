@@ -25,8 +25,8 @@ class FlaskApp:
     return render_template("index.html", screens=self.screens)
 
   def change_screen(self):
-    screen_name = request.form["screen_name"]
-    self.on_change_screen(screen_name)
+    screen_id = request.form["screen_id"]
+    self.on_change_screen(screen_id)
     return redirect("/")
 
   def turn_off_screen(self):

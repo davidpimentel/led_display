@@ -17,7 +17,7 @@ class Scheduler(Thread):
 
     def load_schedule(self):
         for schedule in self.schedule:
-            screens = schedule["screens"]
+            screens = schedule["screens_ids"]
             cron = schedule["cron"]
             scheduled_job = ScheduledJob(screens, self.on_change_screen)
             self.scheduler.add_job(scheduled_job.change_screen, CronTrigger.from_crontab(cron), coalesce=True)
