@@ -2,6 +2,7 @@ import time
 from threading import Thread
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.base import STATE_PAUSED
 from apscheduler.triggers.cron import CronTrigger
 
 
@@ -13,14 +14,23 @@ class Scheduler(Thread):
         self.schedule = schedule
 
         self.scheduler = BackgroundScheduler({"apscheduler.timezone": "US/Eastern"})
-        self.load_schedule()
+        self.__load_schedule()
 
-    def load_schedule(self):
+    def __load_schedule(self):
         for schedule in self.schedule:
-            screens = schedule["screens_ids"]
+            screens = schedule["screen_ids"]
             cron = schedule["cron"]
             scheduled_job = ScheduledJob(screens, self.on_change_screen)
             self.scheduler.add_job(scheduled_job.change_screen, CronTrigger.from_crontab(cron), coalesce=True)
+
+    def pause(self):
+        self.scheduler.pause()
+
+    def is_paused(self):
+        return self.scheduler.state == STATE_PAUSED
+
+    def resume(self):
+        self.scheduler.resume()
 
     def run(self):
         self.scheduler.start()
@@ -35,5 +45,6 @@ class ScheduledJob:
         self.idx = 0
 
     def change_screen(self):
+        print("change screen")
         self.on_change_screen(self.screens[self.idx])
         self.idx = (self.idx + 1) % len(self.screens)

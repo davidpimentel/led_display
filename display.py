@@ -25,18 +25,19 @@ class Display:
 
         # Pub/Sub
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
-            self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
+            self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.override_screen)
 
         # Scheduler
         self.scheduler = None
         if config.get("schedule"):
-            self.scheduler = Scheduler(config["schedule"], on_change_screen=self.change_screen)
+            self.scheduler = Scheduler(config["schedule"], on_change_screen=self.load_screen)
 
         # Web app
         self.flask_app = FlaskApp(
             screens=self.screens,
-            on_change_screen=self.change_screen,
-            on_turn_off_screen=self.turn_off_screen
+            on_change_screen=self.override_screen,
+            on_turn_off_screen=self.turn_off_screen,
+            on_default_screen=self.set_to_default
         )
 
     def run(self):
@@ -50,7 +51,15 @@ class Display:
 
         self.flask_app.start()
 
-    def change_screen(self, screen_id):
+    def set_to_default(self):
+        self.load_screen(self.screens[0]["id"])
+        if self.scheduler and self.scheduler.is_paused():
+            self.scheduler.resume()
+
+
+    def override_screen(self, screen_id):
+        if self.scheduler and not self.scheduler.is_paused():
+            self.scheduler.pause()
         self.load_screen(screen_id)
 
     def turn_off_screen(self):

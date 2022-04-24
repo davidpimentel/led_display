@@ -63,10 +63,12 @@
 
   <!-- Start Menu -->
   <footer>
-    <button class="btn btn-sm mr-2 mb-2 btn-primary start-btn" type="button">
-      <div class="start-icon"></div>
-      <div>Start</div>
-    </button>
+    <form action="/default_screen" method="POST">
+      <button class="btn btn-sm mr-2 mb-2 btn-primary start-btn" name="default" value="default">
+        <div class="start-icon"></div>
+        <div>Start</div>
+      </button>
+    </form>
 
     <div class="clock">01:57PM</div>
   </footer>
