@@ -57,9 +57,7 @@ class Screen(BaseScreen):
 
     def render(self, canvas, data):
         if data is not None:
-            # Replace text scroller if new text
-            if self.text_scroller is None or data.description != self.text_scroller.text:
-                self.text_scroller.scroll_text(canvas, font, 5, 28, self.font, self.white, data.description)
+            self.text_scroller.scroll_text(canvas, self.font, 5, 28, self.white, data.description)
 
             canvas.SetImage(data.icon_image, 4, 4)
 
@@ -69,4 +67,3 @@ class Screen(BaseScreen):
             graphics.DrawText(
                 canvas, self.font, 29 + hi_temp_len, 13, self.white, data.lo_temp
             )
-            self.text_scroller.scroll_text(canvas)
