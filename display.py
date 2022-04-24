@@ -79,7 +79,8 @@ class Display:
         screen_name = screen_dict["screen_name"]
         kwargs = screen_dict.get("args", {})
         self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
-        self.screen.display_indefinitely = display_indefinitely
+        if display_indefinitely:
+            self.screen.display_indefinitely = True
         self.screen_manager.set_screen(self.screen)
 
 

@@ -28,7 +28,7 @@ class Screen(BaseScreen):
         self.lon = lon
         self.font = FONTS["5x8"]
         self.white = COLORS["white"]
-        self.text_scroller = None
+        self.text_scroller = TextScroller()
 
 
     def fetch_data_interval(self):
@@ -59,7 +59,7 @@ class Screen(BaseScreen):
         if data is not None:
             # Replace text scroller if new text
             if self.text_scroller is None or data.description != self.text_scroller.text:
-                self.text_scroller = TextScroller(data.description, 5, 28, self.font, self.white)
+                self.text_scroller.scroll_text(canvas, font, 5, 28, self.font, self.white, data.description)
 
             canvas.SetImage(data.icon_image, 4, 4)
 
