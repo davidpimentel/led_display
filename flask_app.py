@@ -1,10 +1,14 @@
+import base64
+
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory)
+from PIL import Image
 
 
 class FlaskApp:
     def __init__(self, screens=None, on_change_screen=None, on_default_screen=None, on_turn_off_screen=None):
         self.screens = screens
+        self.load_screen_icons()
         self.on_change_screen = on_change_screen
         self.on_turn_off_screen = on_turn_off_screen
         self.on_default_screen = on_default_screen
@@ -24,6 +28,15 @@ class FlaskApp:
 
     def start(self):
         self.flask_app.run(host="0.0.0.0", port="3000")
+
+    def load_screen_icons(self):
+        for screen in self.screens:
+            screen_icon_path = f"screens/{screen['screen_name']}/icon.png"
+            icon_image_bytes = open(screen_icon_path, "rb").read()
+            screen["icon"] = base64.b64encode(icon_image_bytes).decode("utf-8")
+
+
+
 
     def index(self):
         return render_template("index.html", screens=self.screens)

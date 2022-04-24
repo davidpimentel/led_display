@@ -54,7 +54,7 @@
     <form class="app-grid" action="/change_screen" method="POST">
       {% for screen in screens: %}
       <button class="screen-launch" name="screen_id" value="{{screen.id}}">
-        <div class="app-icon" style="background-image: url('/static/assets/screens/{{screen.icon}}');"></div>
+        <div class="app-icon" style="background-image: url('data:image/png;base64,{{screen.icon}}');"></div>
         <p class="app-label">{{screen.display_name}}</p>
       </button>
       {% endfor %}
