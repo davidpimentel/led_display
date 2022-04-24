@@ -16,9 +16,8 @@ class Data:
     feels_like_temp: str
 
 class Screen(BaseScreen):
-    def __init__(self, matrix):
-        super().__init__(matrix)
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+    def __init__(self):
+        super().__init__()
         self.vital_logo = Image.open("./images/vital_logo.png")
         self.font = FONTS["6x9"]
         self.white = COLORS["white"]
@@ -48,19 +47,15 @@ class Screen(BaseScreen):
         if count < 100:
             return self.green
 
-    def render(self, data):
-        self.offscreen_canvas.Clear()
-
+    def render(self, canvas, data):
         if data is not None:
-            self.offscreen_canvas.SetImage(
+            canvas.SetImage(
                 self.vital_logo.convert("RGB"), offset_x=3, offset_y=3
             )
 
             graphics.DrawText(
-                self.offscreen_canvas, self.font, 8, 28, self.green, data.people_at_gym
+                canvas, self.font, 8, 28, self.green, data.people_at_gym
             )
             graphics.DrawText(
-                self.offscreen_canvas, self.font, 42, 28, self.white, data.feels_like_temp + "°"
+                canvas, self.font, 42, 28, self.white, data.feels_like_temp + "°"
             )
-
-        self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)

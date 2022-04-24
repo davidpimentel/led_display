@@ -7,9 +7,8 @@ from screens.base_screen import BaseScreen
 
 
 class Screen(BaseScreen):
-    def __init__(self, matrix):
-        super().__init__(matrix)
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+    def __init__(self):
+        super().__init__()
         self.g_train_logo = Image.open("./images/subway_g.png").convert("RGB")
         self.g_train_logo.thumbnail((11, 11), Image.NEAREST)
 
@@ -21,9 +20,7 @@ class Screen(BaseScreen):
     def animation_delay(self):
         return 30
 
-    def render(self, data):
-        self.offscreen_canvas.Clear()
-
+    def render(self, canvas, data):
         trip = SubwayTimes(train="G")
 
         # NOTE: This gets all upcoming arrivals to the given station (Nassau in this case).
@@ -41,12 +38,12 @@ class Screen(BaseScreen):
         else:
             church_ave = f"{church_ave_arrivals[0].minutes_away}min"
 
-        self.offscreen_canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=2)
+        canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=2)
         graphics.DrawText(
-            self.offscreen_canvas, self.font, 18, 7, self.stationColor, "COURT SQ"
+            canvas, self.font, 18, 7, self.stationColor, "COURT SQ"
         )
         graphics.DrawText(
-            self.offscreen_canvas,
+            canvas,
             self.font,
             18,
             14,
@@ -54,19 +51,17 @@ class Screen(BaseScreen):
             court_sq,
         )
 
-        graphics.DrawLine(self.offscreen_canvas, 0, 15, 63, 15, self.lineColor)
+        graphics.DrawLine(canvas, 0, 15, 63, 15, self.lineColor)
 
-        self.offscreen_canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=18)
+        canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=18)
         graphics.DrawText(
-            self.offscreen_canvas, self.font, 18, 24, self.stationColor, "CHURCH AVE"
+            canvas, self.font, 18, 24, self.stationColor, "CHURCH AVE"
         )
         graphics.DrawText(
-            self.offscreen_canvas,
+            canvas,
             self.font,
             18,
             31,
             self.clockColor,
             church_ave,
         )
-
-        self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)

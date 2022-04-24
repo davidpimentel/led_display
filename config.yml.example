@@ -22,3 +22,22 @@ screens:
   spotify:
     icon: spotify.png
     display_name: Spotify
+
+schedule:
+  -
+    cron: "* 7-9 * * 0,2,4"
+    screens:
+      - weather
+      - gym_count
+      - clock
+  -
+    cron: "* 7-9 * * 1,3"
+    screens:
+      - weather
+      - subway
+      - citibike
+      - clock
+  -
+    cron: "0 10 * * 0-4"
+    screens:
+      - clock

@@ -17,11 +17,10 @@ class Data:
 
 
 class Screen(BaseScreen):
-    def __init__(self, matrix, total_time_in_seconds=240):
-        super().__init__(matrix)
+    def __init__(self, total_time_in_seconds=240):
+        super().__init__()
         self.total_time_in_seconds = total_time_in_seconds
         self.start_time = time.time()
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         self.font = FONTS["7x13"]
         self.white = COLORS["white"]
         self.light_brown = graphics.Color(204, 168, 128)
@@ -48,23 +47,20 @@ class Screen(BaseScreen):
             complete_ratio=complete_ratio
         )
 
-    def render(self, data):
-        self.offscreen_canvas.Clear()
+    def render(self, canvas, data):
         progress_to_fill = int(self.progress_bar_length * data.complete_ratio)
 
-        self.offscreen_canvas.SetImage(self.french_press_img, 3, 3)
+        canvas.SetImage(self.french_press_img, 3, 3)
 
         for i in range(progress_to_fill):
             color = self.light_brown if i >= progress_to_fill - 2 else self.dark_brown # light brown topper
             y = self.bottom_of_press_y - i
-            graphics.DrawLine(self.offscreen_canvas, 6, y, 16, y, color)
+            graphics.DrawLine(canvas, 6, y, 16, y, color)
 
         if data.complete_ratio >= 1.0:
             if self.blink_text:
-                graphics.DrawText(self.offscreen_canvas, self.font, 26, 22, self.white, "PLUNGE")
+                graphics.DrawText(canvas, self.font, 26, 22, self.white, "PLUNGE")
 
             self.blink_text = not self.blink_text
         else:
-            graphics.DrawText(self.offscreen_canvas, self.font, 26, 22, self.white, data.time_left)
-
-        self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
+            graphics.DrawText(canvas, self.font, 26, 22, self.white, data.time_left)

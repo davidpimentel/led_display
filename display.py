@@ -4,41 +4,35 @@ import os
 import sentry_sdk
 import yaml
 from dotenv import load_dotenv
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 from flask_app import FlaskApp
 from lib.mqtt.adafruit_mqtt_client import AdafruitMQTTClient
-from scheduler import Scheduler
+from lib.scheduler import Scheduler
+from lib.screen_manager import ScreenManager
 
 
 class Display:
     def __init__(self):
-        # Configuration for the matrix
-        options = RGBMatrixOptions()
-        options.rows = 32
-        options.cols = 64
-        options.chain_length = 1
-        options.parallel = 1
-        options.hardware_mapping = "adafruit-hat-pwm"
-        self.matrix = RGBMatrix(options=options)
-
-        # Config/ Screen loading
+        # Config
         with open("config.yml", "r", encoding="utf-8") as config_file:
             config = yaml.safe_load(config_file)
 
+        # Screen
+        self.screen_manager = ScreenManager()
         self.screen = None
         self.screens = config["screens"]
+        self.load_screen(next(iter(self.screens))) # pick the first screen in the dict to start
 
-        # pick the first screen in the dict to start
-        self.load_screen(next(iter(self.screens)))
-
+        # Pub/Sub
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
             self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
 
+        # Scheduler
         self.scheduler = None
         if config.get("schedule"):
             self.scheduler = Scheduler(config["schedule"], on_change_screen=self.change_screen)
 
+        # Web app
         self.flask_app = FlaskApp(
             screens=self.screens,
             on_change_screen=self.change_screen,
@@ -48,28 +42,26 @@ class Display:
     def run(self):
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
             self.adafruit_mqtt_client.start()
-        self.screen.start()
-        self.scheduler.start() if self.scheduler else None
+
+        self.screen_manager.start()
+
+        if self.scheduler:
+            self.scheduler.start()
+
         self.flask_app.start()
 
     def change_screen(self, screen_name):
-        if self.screen:
-            self.screen.stop()
-
         self.load_screen(screen_name)
-        self.screen.start()
 
     def turn_off_screen(self):
-        if self.screen:
-            self.screen.stop()
-            self.screen = None
+        self.screen.set_screen(None)
+        self.screen = None
 
     def load_screen(self, screen_name):
         screen_dict = self.screens[screen_name]
         kwargs = screen_dict.get("args", {})
-        self.screen = importlib.import_module("screens." + screen_name).Screen(
-            self.matrix, **kwargs
-        )
+        self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
+        self.screen_manager.set_screen(self.screen)
 
 
 sentry_sdk.init( # pylint: disable=abstract-class-instantiated

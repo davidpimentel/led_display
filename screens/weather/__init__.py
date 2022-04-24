@@ -22,14 +22,13 @@ class Data:
 
 
 class Screen(BaseScreen):
-    def __init__(self, matrix, lat=None, lon=None):
-        super().__init__(matrix)
+    def __init__(self, lat=None, lon=None):
+        super().__init__()
         self.lat = lat
         self.lon = lon
         self.font = FONTS["5x8"]
         self.white = COLORS["white"]
         self.text_scroller = None
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
 
 
     def fetch_data_delay(self):
@@ -56,22 +55,18 @@ class Screen(BaseScreen):
             icon_image=icon_image
             )
 
-    def render(self, data):
-        self.offscreen_canvas.Clear()
-
+    def render(self, canvas, data):
         if data is not None:
             # Replace text scroller if new text
             if self.text_scroller is None or data.description != self.text_scroller.text:
                 self.text_scroller = TextScroller(data.description, 5, 28, self.font, self.white)
 
-            self.offscreen_canvas.SetImage(data.icon_image, 4, 4)
+            canvas.SetImage(data.icon_image, 4, 4)
 
             hi_temp_len = graphics.DrawText(
-                self.offscreen_canvas, self.font, 25, 13, self.white, data.hi_temp
+                canvas, self.font, 25, 13, self.white, data.hi_temp
             )
             graphics.DrawText(
-                self.offscreen_canvas, self.font, 29 + hi_temp_len, 13, self.white, data.lo_temp
+                canvas, self.font, 29 + hi_temp_len, 13, self.white, data.lo_temp
             )
-            self.text_scroller.scroll_text(self.offscreen_canvas)
-
-        self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
+            self.text_scroller.scroll_text(canvas)

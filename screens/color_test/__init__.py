@@ -1,12 +1,10 @@
 from rgbmatrix import graphics
-
 from screens.base_screen import BaseScreen
 
 
 class Screen(BaseScreen):
-    def __init__(self, matrix):
-        super().__init__(matrix)
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+    def __init__(self):
+        super().__init__()
         self.red = 255
         self.green = 0
         self.blue = 0
@@ -14,14 +12,12 @@ class Screen(BaseScreen):
     def animation_delay(self):
         return 3
 
-    def render(self, data):
-      for x in range(0, self.offscreen_canvas.width):
-        for y in range(0, self.offscreen_canvas.height):
-          self.offscreen_canvas.SetPixel(x, y, self.red, self.green, self.blue)
+    def render(self, canvas, data):
+      for x in range(0, canvas.width):
+        for y in range(0, canvas.height):
+          canvas.SetPixel(x, y, self.red, self.green, self.blue)
 
       temp = self.red
       self.red = self.green
       self.green = self.blue
       self.blue = temp
-
-      self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)

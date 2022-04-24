@@ -10,9 +10,8 @@ from screens.base_screen import BaseScreen
 
 
 class Screen(BaseScreen):
-    def __init__(self, matrix):
-        super().__init__(matrix)
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+    def __init__(self):
+        super().__init__()
         self.timezone = pytz.timezone('US/Eastern')
         self.font = FONTS["6x9"]
 
@@ -46,21 +45,18 @@ class Screen(BaseScreen):
         minutes_words = minutes_words.replace('-', ' ')
         return (hours_words + " " + minutes_words).upper()
 
-    def render(self, data):
+    def render(self, canvas, data):
         current_hours_minutes = data
         self.last_rendered_hours_minutes = current_hours_minutes
-        self.offscreen_canvas.Clear()
 
         time_in_words = self.hours_minutes_to_words(current_hours_minutes)
 
         for i, word in enumerate(time_in_words.split(" ")):
             graphics.DrawText(
-                self.offscreen_canvas,
+                canvas,
                 self.font,
                 3,
                 10 + i * 9,
                 COLORS["white"],
                 word
             )
-
-        self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
