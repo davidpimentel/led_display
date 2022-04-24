@@ -5,8 +5,7 @@ import requests
 import spotipy
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from lib.view_helper.text import (MultilineTextScroller, TextRenderData,
-                                  TextScroller)
+from lib.view_helper.text import MultilineTextOscillator, TextRenderData
 from PIL import Image
 from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
@@ -24,14 +23,13 @@ class Screen(BaseScreen):
     def __init__(self, username=None):
         super().__init__(display_indefinitely=True)
         scope = "user-read-currently-playing"
-        self.font = FONTS["6x9"]
-        self.text_color = COLORS["white"]
+        self.font = FONTS["4x6"]
+        self.white = COLORS["white"]
+        self.gray = COLORS["gray"]
         cache_path = ".cache-" + username
         cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=cache_path)
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(open_browser=False, scope=scope, cache_handler=cache_handler))
-        self.artist_scroller = TextScroller()
-        self.song_scroller = TextScroller()
-        self.multiline_scroller = MultilineTextScroller()
+        self.multiline_scroller = MultilineTextOscillator()
 
     def fetch_data_interval(self):
         return 5
@@ -55,13 +53,13 @@ class Screen(BaseScreen):
 
 
     def animation_interval(self):
-        return 0.04
+        return 0.05
 
     def render(self, canvas, data):
 
         if data is None:
             graphics.DrawText(
-                canvas, self.font, 4, 10, self.text_color, "NOTHING PLAYING"
+                canvas, self.font, 4, 10, self.white, "NOTHING PLAYING"
             )
             return
 
@@ -72,28 +70,6 @@ class Screen(BaseScreen):
             #     im.convert("RGB"), offset_x=3, offset_y=3
             # )
 
-        # self.artist_scroller.scroll_text(
-        #     canvas,
-        #     TextRenderData(
-        #         font=self.font,
-        #         position_x=4,
-        #         position_y=10,
-        #         text_color=self.text_color,
-        #         text=data.artist_name
-        #     )
-        # )
-
-        # self.song_scroller.scroll_text(
-        #     canvas,
-        #     TextRenderData(
-        #         font=self.font,
-        #         position_x=4,
-        #         position_y=20,
-        #         text_color=self.text_color,
-        #         text=data.song_name
-        #     )
-        # )
-
         self.multiline_scroller.scroll_text(
             canvas,
             [
@@ -101,15 +77,15 @@ class Screen(BaseScreen):
                     font=self.font,
                     position_x=4,
                     position_y=10,
-                    text_color=self.text_color,
-                    text=data.artist_name
+                    text_color=self.white,
+                    text=data.song_name
                 ),
                 TextRenderData(
                     font=self.font,
                     position_x=4,
                     position_y=20,
-                    text_color=self.text_color,
-                    text=data.song_name
+                    text_color=self.gray,
+                    text=data.artist_name
                 )
             ]
         )

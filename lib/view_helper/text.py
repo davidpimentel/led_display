@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 
 from rgbmatrix import graphics
@@ -59,6 +60,53 @@ class MultilineTextScroller:
             if self.positions_x[i] + self.max_length < 0:
                 self.positions_x = [canvas.width for pos in self.positions_x]
 
+
+class MultilineTextOscillator:
+    def __init__(self, delay=1):
+        self.delay = delay
+        self.delay_timestamp = None
+        self.text_render_data_list = []
+        self.positions_x = []
+        self.max_length = 0
+        self.modifier = -1
+
+    def scroll_text(self, canvas, text_render_data_list):
+        if self.text_render_data_list is None or text_render_data_list != self.text_render_data_list:
+            self.text_render_data_list = text_render_data_list
+            self.positions_x = [text_render_data.position_x for text_render_data in self.text_render_data_list]
+            self.modifier = -1
+            self.max_length = 0
+
+        for i, text_render_data in enumerate(text_render_data_list):
+            length = graphics.DrawText(
+                canvas,
+                text_render_data.font,
+                self.positions_x[i],
+                text_render_data.position_y,
+                text_render_data.text_color,
+                text_render_data.text
+            )
+
+            self.max_length = max(self.max_length, length)
+
+        if not self.is_delayed():
+            if self.max_length >= canvas.width:
+                self.positions_x = [position + self.modifier for position in self.positions_x]
+
+            if self.modifier == 1:
+                positions_offscreen = [position for position in self.positions_x if position < 0]
+            else:
+                positions_offscreen = [position for position in self.positions_x if position + self.max_length >= canvas.width]
+
+            if not positions_offscreen:
+                self.modifier *= -1
+                self.set_delay()
+
+    def set_delay(self):
+        self.delay_timestamp = time.time()
+
+    def is_delayed(self):
+        return self.delay_timestamp is not None and time.time() - self.delay < self.delay_timestamp
 
 def right_align_text(canvas=None, text=None, font=None, font_color=None, y=0, padding=0):
     width = 0
