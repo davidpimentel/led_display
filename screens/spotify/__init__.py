@@ -5,7 +5,8 @@ import requests
 import spotipy
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from lib.view_helper.text import TextScroller
+from lib.view_helper.text import (MultilineTextScroller, TextRenderData,
+                                  TextScroller)
 from PIL import Image
 from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
@@ -30,6 +31,7 @@ class Screen(BaseScreen):
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(open_browser=False, scope=scope, cache_handler=cache_handler))
         self.artist_scroller = TextScroller()
         self.song_scroller = TextScroller()
+        self.multiline_scroller = MultilineTextScroller()
 
     def fetch_data_interval(self):
         return 5
@@ -70,10 +72,44 @@ class Screen(BaseScreen):
             #     im.convert("RGB"), offset_x=3, offset_y=3
             # )
 
-        self.artist_scroller.scroll_text(
-            canvas, self.font, 4, 10, self.text_color, data.artist_name
-        )
+        # self.artist_scroller.scroll_text(
+        #     canvas,
+        #     TextRenderData(
+        #         font=self.font,
+        #         position_x=4,
+        #         position_y=10,
+        #         text_color=self.text_color,
+        #         text=data.artist_name
+        #     )
+        # )
 
-        self.song_scroller.scroll_text(
-            canvas, self.font, 4, 20, self.text_color, data.song_name
+        # self.song_scroller.scroll_text(
+        #     canvas,
+        #     TextRenderData(
+        #         font=self.font,
+        #         position_x=4,
+        #         position_y=20,
+        #         text_color=self.text_color,
+        #         text=data.song_name
+        #     )
+        # )
+
+        self.multiline_scroller.scroll_text(
+            canvas,
+            [
+                TextRenderData(
+                    font=self.font,
+                    position_x=4,
+                    position_y=10,
+                    text_color=self.text_color,
+                    text=data.artist_name
+                ),
+                TextRenderData(
+                    font=self.font,
+                    position_x=4,
+                    position_y=20,
+                    text_color=self.text_color,
+                    text=data.song_name
+                )
+            ]
         )
