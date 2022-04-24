@@ -9,7 +9,7 @@ class Screen(BaseScreen):
         self.green = 0
         self.blue = 0
 
-    def animation_delay(self):
+    def animation_interval(self):
         return 3
 
     def render(self, canvas, data):

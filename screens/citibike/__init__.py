@@ -30,7 +30,7 @@ class Screen(BaseScreen):
         self.station_id = station_id
         self.station_name = station_name
 
-    def fetch_data_delay(self):
+    def fetch_data_interval(self):
         return 30
     def fetch_data(self):
         response = request.urlopen(

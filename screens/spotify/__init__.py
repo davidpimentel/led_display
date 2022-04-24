@@ -13,7 +13,7 @@ from spotipy.oauth2 import SpotifyOAuth
 
 class Screen(BaseScreen):
     def __init__(self, username=None):
-        super().__init__()
+        super().__init__(display_indefinitely=True)
         scope = "user-read-currently-playing"
         self.font = FONTS["6x9"]
         self.text_color = COLORS["white"]
@@ -22,38 +22,38 @@ class Screen(BaseScreen):
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(open_browser=False, scope=scope, cache_handler=cache_handler))
         self.current_song_id = None
 
-    def animation_delay(self):
+    def animation_interval(self):
         return 3
 
     def render(self, canvas, data):
-      currently_playing = self.sp.currently_playing()
+        currently_playing = self.sp.currently_playing()
 
-      if currently_playing is None:
-        self.current_song_id = None
-        graphics.DrawText(
-            canvas, self.font, 4, 10, self.text_color, "NOTHING PLAYING"
-        )
-        return
+        if currently_playing is None:
+            self.current_song_id = None
+            graphics.DrawText(
+                canvas, self.font, 4, 10, self.text_color, "NOTHING PLAYING"
+            )
+            return
 
-      song_id = currently_playing["item"]["id"]
-      if song_id != self.current_song_id:
-        self.current_song_id = song_id
-        item = currently_playing["item"]
-        album_image_url = item["album"]["images"][2]["url"]
-        artist_name = item["artists"][0]["name"]
-        song_name = item["name"]
+        song_id = currently_playing["item"]["id"]
+        if song_id != self.current_song_id:
+            self.current_song_id = song_id
+            item = currently_playing["item"]
+            album_image_url = item["album"]["images"][2]["url"]
+            artist_name = item["artists"][0]["name"]
+            song_name = item["name"]
 
-        # im = Image.open(requests.get(album_image_url, stream=True).raw)
-        # im = im.resize((32, 32), Image.NEAREST)
+            # im = Image.open(requests.get(album_image_url, stream=True).raw)
+            # im = im.resize((32, 32), Image.NEAREST)
 
-        # canvas.SetImage(
-        #     im.convert("RGB"), offset_x=3, offset_y=3
-        # )
+            # canvas.SetImage(
+            #     im.convert("RGB"), offset_x=3, offset_y=3
+            # )
 
-        graphics.DrawText(
-            canvas, self.font, 4, 10, self.text_color, artist_name
-        )
+            graphics.DrawText(
+                canvas, self.font, 4, 10, self.text_color, artist_name
+            )
 
-        graphics.DrawText(
-            canvas, self.font, 4, 20, self.text_color, song_name
-        )
+            graphics.DrawText(
+                canvas, self.font, 4, 20, self.text_color, song_name
+            )

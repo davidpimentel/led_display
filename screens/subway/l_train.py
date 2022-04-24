@@ -21,7 +21,7 @@ class LTrain(BaseScreen):
         self.clockColor = COLORS["yellow"]
         self.lineColor = COLORS["grey"]
 
-    def animation_delay(self):
+    def animation_interval(self):
         return 30
 
     def render(self, data):

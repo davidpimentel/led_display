@@ -18,7 +18,7 @@ class Data:
 
 class Screen(BaseScreen):
     def __init__(self, total_time_in_seconds=240):
-        super().__init__()
+        super().__init__(duration=(total_time_in_seconds + 30))
         self.total_time_in_seconds = total_time_in_seconds
         self.start_time = time.time()
         self.font = FONTS["7x13"]
@@ -30,10 +30,10 @@ class Screen(BaseScreen):
         self.progress_bar_length = 17
         self.blink_text = True
 
-    def fetch_data_delay(self):
+    def fetch_data_interval(self):
         return 1
 
-    def animation_delay(self):
+    def animation_interval(self):
         return 1
 
     def fetch_data(self):

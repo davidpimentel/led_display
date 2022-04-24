@@ -31,10 +31,10 @@ class Screen(BaseScreen):
         self.text_scroller = None
 
 
-    def fetch_data_delay(self):
+    def fetch_data_interval(self):
         return 60
 
-    def animation_delay(self):
+    def animation_interval(self):
         return 0.04
 
     def fetch_data(self):

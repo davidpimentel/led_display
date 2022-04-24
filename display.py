@@ -18,24 +18,24 @@ class Display:
             config = yaml.safe_load(config_file)
 
         # Screen
-        self.screen_manager = ScreenManager()
+        self.screen_manager = ScreenManager(on_screen_completed=self.set_to_default)
         self.screen = None
         self.screens = config["screens"]
         self.load_screen(self.screens[0]["id"]) # pick the first screen in the dict to start
 
         # Pub/Sub
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
-            self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.override_screen)
+            self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
 
         # Scheduler
         self.scheduler = None
         if config.get("schedule"):
-            self.scheduler = Scheduler(config["schedule"], on_change_screen=self.load_screen)
+            self.scheduler = Scheduler(config["schedule"], on_change_screen=self.set_screen_from_schedule)
 
         # Web app
         self.flask_app = FlaskApp(
             screens=self.screens,
-            on_change_screen=self.override_screen,
+            on_change_screen=self.change_screen,
             on_turn_off_screen=self.turn_off_screen,
             on_default_screen=self.set_to_default
         )
@@ -52,12 +52,20 @@ class Display:
         self.flask_app.start()
 
     def set_to_default(self):
-        self.load_screen(self.screens[0]["id"])
+        self.load_screen(self.screens[0]["id"], display_indefinitely=True)
         if self.scheduler and self.scheduler.is_paused():
             self.scheduler.resume()
 
 
+    def set_screen_from_schedule(self, screen_id):
+        self.load_screen(screen_id, display_indefinitely=True)
+
     def override_screen(self, screen_id):
+        if self.scheduler and not self.scheduler.is_paused():
+            self.scheduler.pause()
+        self.load_screen(screen_id, display_indefinitely=True)
+
+    def change_screen(self, screen_id):
         if self.scheduler and not self.scheduler.is_paused():
             self.scheduler.pause()
         self.load_screen(screen_id)
@@ -66,11 +74,12 @@ class Display:
         self.screen.set_screen(None)
         self.screen = None
 
-    def load_screen(self, screen_id):
+    def load_screen(self, screen_id, display_indefinitely=False):
         screen_dict = next((screen for screen in self.screens if screen["id"] == screen_id))
         screen_name = screen_dict["screen_name"]
         kwargs = screen_dict.get("args", {})
         self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
+        self.screen.display_indefinitely = display_indefinitely
         self.screen_manager.set_screen(self.screen)
 
 

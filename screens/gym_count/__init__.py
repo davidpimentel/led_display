@@ -23,7 +23,7 @@ class Screen(BaseScreen):
         self.white = COLORS["white"]
         self.green = COLORS["green"]
 
-    def fetch_data_delay(self):
+    def fetch_data_interval(self):
         return 30
 
     def fetch_data(self):

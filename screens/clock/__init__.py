@@ -11,7 +11,7 @@ from screens.base_screen import BaseScreen
 
 class Screen(BaseScreen):
     def __init__(self):
-        super().__init__()
+        super().__init__(display_indefinitely=True)
         self.timezone = pytz.timezone('US/Eastern')
         self.font = FONTS["6x9"]
 
@@ -19,7 +19,7 @@ class Screen(BaseScreen):
     def fetch_data(self):
         return self.get_current_hours_minutes()
 
-    def fetch_data_delay(self):
+    def fetch_data_interval(self):
         return 1
 
     def get_current_hours_minutes(self):
