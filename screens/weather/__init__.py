@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from lib.view_helper.text import TextScroller, right_align_text
+from lib.view_helper.text import TextRenderData, TextScroller, right_align_text
 from lib.weather import get_current_weather
 from PIL import Image
 from rgbmatrix import graphics
@@ -57,7 +57,16 @@ class Screen(BaseScreen):
 
     def render(self, canvas, data):
         if data is not None:
-            self.text_scroller.scroll_text(canvas, self.font, 5, 28, self.white, data.description)
+            self.text_scroller.scroll_text(
+                canvas,
+                TextRenderData(
+                    font=self.font,
+                    position_x=5,
+                    position_y=28,
+                    text_color=self.white,
+                    text=data.description
+                    )
+                )
 
             canvas.SetImage(data.icon_image, 4, 4)
 
