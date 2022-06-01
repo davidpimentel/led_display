@@ -1,11 +1,9 @@
 from lib.colors import COLORS
 from lib.fonts import FONTS
+from lib.subway_times import SubwayTimes
 from PIL import Image
 from rgbmatrix import graphics
-
 from screens.base_screen import BaseScreen
-
-from lib.subway_times import SubwayTimes
 
 
 class LTrain(BaseScreen):
@@ -19,7 +17,7 @@ class LTrain(BaseScreen):
         self.font = FONTS["5x8"]
         self.stationColor = COLORS["white"]
         self.clockColor = COLORS["yellow"]
-        self.lineColor = COLORS["grey"]
+        self.lineColor = COLORS["gray"]
 
     def animation_interval(self):
         return 30

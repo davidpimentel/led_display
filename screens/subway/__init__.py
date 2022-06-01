@@ -15,7 +15,7 @@ class Screen(BaseScreen):
         self.font = FONTS["4x6"]
         self.stationColor = COLORS["white"]
         self.clockColor = COLORS["yellow"]
-        self.lineColor = COLORS["grey"]
+        self.lineColor = COLORS["gray"]
 
     def animation_interval(self):
         return 30
