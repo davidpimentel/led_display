@@ -44,8 +44,6 @@ class Display:
         if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
             self.adafruit_mqtt_client.start()
 
-        self.screen_manager.start()
-
         if self.scheduler:
             self.scheduler.start()
 
