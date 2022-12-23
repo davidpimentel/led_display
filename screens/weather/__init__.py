@@ -15,8 +15,8 @@ SCREEN_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 @dataclass
 class Data:
-    hi_temp: str
-    lo_temp: str
+    temp: str
+    feels_like_temp: str
     description: str
     icon_image: str
 
@@ -26,8 +26,10 @@ class Screen(BaseScreen):
         super().__init__()
         self.lat = lat
         self.lon = lon
-        self.font = FONTS["5x8"]
+        self.scroll_font = FONTS["5x8"]
+        self.temp_font = FONTS["6x12"]
         self.white = COLORS["white"]
+        self.gray = COLORS["gray"]
         self.text_scroller = TextScroller()
 
 
@@ -39,18 +41,17 @@ class Screen(BaseScreen):
 
     def fetch_data(self):
         weather = get_current_weather(self.lat, self.lon)
-        today_weather = weather["daily"][0]
         current_weather = weather["current"]
-        hi_temp = str(int(today_weather["temp"]["max"])) + "°"
-        lo_temp = str(int(today_weather["temp"]["min"])) + "°"
-        current_temp = str(int(current_weather["temp"])) + "°"
-        today_weather_description = today_weather["weather"][0]
-        description = current_temp + " " + today_weather_description["description"].upper()
+        temp = str(int(current_weather["temp"])) + "°"
+        feels_like_temp = str(int(current_weather["feels_like"])) + "°"
+
+        today_weather_description = current_weather["weather"][0]
+        description = today_weather_description["description"].upper()
         icon_id = today_weather_description["icon"]
         icon_image = Image.open(SCREEN_DIRECTORY + "/images/" + icon_id + ".png").convert("RGB")
         return Data(
-            hi_temp=hi_temp,
-            lo_temp=lo_temp,
+            temp=temp,
+            feels_like_temp=feels_like_temp,
             description=description,
             icon_image=icon_image
             )
@@ -60,8 +61,8 @@ class Screen(BaseScreen):
             self.text_scroller.scroll_text(
                 canvas,
                 TextRenderData(
-                    font=self.font,
-                    position_x=5,
+                    font=self.scroll_font,
+                    position_x=canvas.width,
                     position_y=28,
                     text_color=self.white,
                     text=data.description
@@ -71,8 +72,8 @@ class Screen(BaseScreen):
             canvas.SetImage(data.icon_image, 4, 4)
 
             hi_temp_len = graphics.DrawText(
-                canvas, self.font, 25, 13, self.white, data.hi_temp
+                canvas, self.temp_font, 25, 16, self.white, data.temp
             )
             graphics.DrawText(
-                canvas, self.font, 29 + hi_temp_len, 13, self.white, data.lo_temp
+                canvas, self.temp_font, 28 + hi_temp_len, 16, self.gray, data.feels_like_temp
             )
