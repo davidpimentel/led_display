@@ -37,8 +37,6 @@ class Display:
         )
 
     def run(self):
-        print("enabled")
-        print(PubSubClient.is_enabled())
 
         # Pub/Sub
         if PubSubClient.is_enabled():
