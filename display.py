@@ -1,12 +1,12 @@
 import importlib
-import os
+import json
 
 import sentry_sdk
 import yaml
 from dotenv import load_dotenv
 
 from flask_app import FlaskApp
-from lib.mqtt.adafruit_mqtt_client import AdafruitMQTTClient
+from lib.pubsub.pubsub_client import PubSubClient
 from lib.scheduler import Scheduler
 from lib.screen_manager import ScreenManager
 
@@ -24,8 +24,7 @@ class Display:
         self.load_screen(self.screens[0]["id"]) # pick the first screen in the dict to start
 
         # Pub/Sub
-        if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
-            self.adafruit_mqtt_client = AdafruitMQTTClient(on_change_screen=self.change_screen)
+        self.pubsub_client = PubSubClient(on_message_received=self.change_screen_pubsub)
 
         # Scheduler
         self.scheduler = None
@@ -41,8 +40,8 @@ class Display:
         )
 
     def run(self):
-        if os.getenv("ENABLE_ADAFRUIT_MQTT") == "true":
-            self.adafruit_mqtt_client.start()
+        if PubSubClient.is_enabled():
+            self.pubsub_client.start()
 
         if self.scheduler:
             self.scheduler.start()
@@ -67,6 +66,12 @@ class Display:
         if self.scheduler and not self.scheduler.is_paused():
             self.scheduler.pause()
         self.load_screen(screen_id)
+
+    def change_screen_pubsub(self, topic, payload, dup, qos, retain, **kwargs):
+        parsed_payload = json.loads(payload)
+        screen_id = parsed_payload.get("screen_id")
+        self.change_screen(screen_id)
+
 
     def turn_off_screen(self):
         self.screen.set_screen(None)

@@ -24,16 +24,8 @@ sudo reboot
 
 The display should start at boot now
 
-## Enable MQTT support
-- Create an account at io.adafruit.com. go to Feeds > view all.
-- Create a new group called `LED Display`
-- Create a feed within that group called `change_display`
-- be sure to set the following env variables
-  ```
-  ENABLE_ADAFRUIT_MQTT=true
-  ADAFRUIT_IO_USERNAME=ADAFRUIT_USERNAME
-  ADAFRUIT_IO_KEY=ADAFRUIT_KEY
-  ```
+## Enable Pubsub support
+# TODO
 
 
 ## Creating a module
