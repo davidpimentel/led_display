@@ -23,9 +23,6 @@ class Display:
         self.screens = config["screens"]
         self.load_screen(self.screens[0]["id"]) # pick the first screen in the dict to start
 
-        # Pub/Sub
-        self.pubsub_client = PubSubClient(on_message_received=self.change_screen_pubsub)
-
         # Scheduler
         self.scheduler = None
         if config.get("schedule"):
@@ -40,7 +37,12 @@ class Display:
         )
 
     def run(self):
+        print("enabled")
+        print(PubSubClient.is_enabled())
+
+        # Pub/Sub
         if PubSubClient.is_enabled():
+            self.pubsub_client = PubSubClient(on_message_received=self.change_screen_pubsub)
             self.pubsub_client.start()
 
         if self.scheduler:
