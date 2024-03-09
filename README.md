@@ -24,9 +24,6 @@ sudo reboot
 
 The display should start at boot now
 
-## Enable Pubsub support
-# TODO
-
 
 ## Creating a module
 To add a module:

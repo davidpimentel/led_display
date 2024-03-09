@@ -25,7 +25,6 @@ class ScreenManager:
         self.screen_thread = ScreenThread(
             matrix=self.matrix,
             screen=screen,
-            on_screen_completed=self.on_screen_completed
+            on_screen_completed=self.on_screen_completed,
         )
         self.screen_thread.start()
-

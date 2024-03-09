@@ -11,6 +11,4 @@ python-dotenv==0.19.2
 pyYAML==6.0
 pep8==1.7.1
 pylint==2.13.5
-APScheduler==3.9.1
-awsiotsdk==1.11.7
 espn_api==0.33.0

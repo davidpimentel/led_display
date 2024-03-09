@@ -6,8 +6,6 @@ import yaml
 from dotenv import load_dotenv
 
 from flask_app import FlaskApp
-from lib.pubsub.pubsub_client import PubSubClient
-from lib.scheduler import Scheduler
 from lib.screen_manager import ScreenManager
 
 
@@ -20,17 +18,11 @@ class Display:
         # Screen
         self.screen_manager = ScreenManager(on_screen_completed=self.set_to_default)
         self.screen = None
+        self.screen_id = None
         self.screens = config["screens"]
         self.load_screen(
             self.screens[0]["id"]
         )  # pick the first screen in the dict to start
-
-        # Scheduler
-        self.scheduler = None
-        if config.get("schedule"):
-            self.scheduler = Scheduler(
-                config["schedule"], on_change_screen=self.set_screen_from_schedule
-            )
 
         # Web app
         self.flask_app = FlaskApp(
@@ -38,47 +30,25 @@ class Display:
             on_change_screen=self.change_screen,
             on_turn_off_screen=self.turn_off_screen,
             on_default_screen=self.set_to_default,
+            get_current_screen=self.get_current_screen,
         )
 
     def run(self):
-        # Pub/Sub
-        if PubSubClient.is_enabled():
-            self.pubsub_client = PubSubClient(
-                on_message_received=self.change_screen_pubsub
-            )
-            self.pubsub_client.start()
-
-        if self.scheduler:
-            self.scheduler.start()
-
         self.flask_app.start()
 
     def set_to_default(self):
         self.load_screen(self.screens[0]["id"], display_indefinitely=True)
-        if self.scheduler and self.scheduler.is_paused():
-            self.scheduler.resume()
-
-    def set_screen_from_schedule(self, screen_id):
-        self.load_screen(screen_id, display_indefinitely=True)
 
     def override_screen(self, screen_id):
-        if self.scheduler and not self.scheduler.is_paused():
-            self.scheduler.pause()
         self.load_screen(screen_id, display_indefinitely=True)
 
     def change_screen(self, screen_id):
-        if self.scheduler and not self.scheduler.is_paused():
-            self.scheduler.pause()
         self.load_screen(screen_id)
-
-    def change_screen_pubsub(self, topic, payload, dup, qos, retain, **kwargs):
-        parsed_payload = json.loads(payload)
-        screen_id = parsed_payload.get("screen_id")
-        self.change_screen(screen_id)
 
     def turn_off_screen(self):
         self.screen.set_screen(None)
         self.screen = None
+        self.screen_id = None
 
     def load_screen(self, screen_id, display_indefinitely=False):
         screen_dict = next(
@@ -86,10 +56,14 @@ class Display:
         )
         screen_name = screen_dict["screen_name"]
         kwargs = screen_dict.get("args", {})
+        self.screen_id = screen_id
         self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
         if display_indefinitely:
             self.screen.display_indefinitely = True
         self.screen_manager.set_screen(self.screen)
+
+    def get_current_screen(self):
+        return self.screen_id
 
 
 sentry_sdk.init(  # pylint: disable=abstract-class-instantiated
