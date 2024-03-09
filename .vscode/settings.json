@@ -1,7 +1,10 @@
 {
   "python.linting.pylintEnabled": true,
   "python.linting.pep8Enabled": true,
-  "python.formatting.provider": "autopep8",
+  "python.formatting.provider": "none",
   "python.linting.enabled": true,
   "editor.tabSize": 4,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
 }

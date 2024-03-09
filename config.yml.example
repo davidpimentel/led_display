@@ -3,11 +3,9 @@ screens:
     id: clock
     screen_name: clock
     display_name: Word Clock
-    icon: clock.png
   -
     id: weather
     screen_name: weather
-    icon: weather.png
     display_name: Weather
     args:
       lat: "40.725686"
@@ -16,41 +14,34 @@ screens:
     id: gym_count
     screen_name: gym_count
     display_name: Gym Count
-    icon: my-computer.png
   -
     id: spotify_dave
     screen_name: spotify
     display_name: Spotify (Dave)
-    icon: spotify.png
     args:
       username: dave
   -
     id: subway
     screen_name: subway
     display_name: Subway
-    icon: mta.png
   -
     id: who_chooses
     screen_name: who_chooses
     display_name: Who Chooses
-    icon: my-computer.png
   -
     id: citibike
     screen_name: citibike
     display_name: Citibike
-    icon: my-computer.png
     args:
       station_id: "3108"
       station_name: Nassau Ave
   -
     id: color_test
     screen_name: color_test
-    icon: color-test.png
     display_name: Color Test
   -
     id: coffee_timer
     screen_name: coffee_timer
-    icon: my-computer.png
     display_name: Coffee Timer
 schedule:
   -

@@ -21,26 +21,31 @@ class Display:
         self.screen_manager = ScreenManager(on_screen_completed=self.set_to_default)
         self.screen = None
         self.screens = config["screens"]
-        self.load_screen(self.screens[0]["id"]) # pick the first screen in the dict to start
+        self.load_screen(
+            self.screens[0]["id"]
+        )  # pick the first screen in the dict to start
 
         # Scheduler
         self.scheduler = None
         if config.get("schedule"):
-            self.scheduler = Scheduler(config["schedule"], on_change_screen=self.set_screen_from_schedule)
+            self.scheduler = Scheduler(
+                config["schedule"], on_change_screen=self.set_screen_from_schedule
+            )
 
         # Web app
         self.flask_app = FlaskApp(
             screens=self.screens,
             on_change_screen=self.change_screen,
             on_turn_off_screen=self.turn_off_screen,
-            on_default_screen=self.set_to_default
+            on_default_screen=self.set_to_default,
         )
 
     def run(self):
-
         # Pub/Sub
         if PubSubClient.is_enabled():
-            self.pubsub_client = PubSubClient(on_message_received=self.change_screen_pubsub)
+            self.pubsub_client = PubSubClient(
+                on_message_received=self.change_screen_pubsub
+            )
             self.pubsub_client.start()
 
         if self.scheduler:
@@ -52,7 +57,6 @@ class Display:
         self.load_screen(self.screens[0]["id"], display_indefinitely=True)
         if self.scheduler and self.scheduler.is_paused():
             self.scheduler.resume()
-
 
     def set_screen_from_schedule(self, screen_id):
         self.load_screen(screen_id, display_indefinitely=True)
@@ -72,13 +76,14 @@ class Display:
         screen_id = parsed_payload.get("screen_id")
         self.change_screen(screen_id)
 
-
     def turn_off_screen(self):
         self.screen.set_screen(None)
         self.screen = None
 
     def load_screen(self, screen_id, display_indefinitely=False):
-        screen_dict = next((screen for screen in self.screens if screen["id"] == screen_id))
+        screen_dict = next(
+            (screen for screen in self.screens if screen["id"] == screen_id)
+        )
         screen_name = screen_dict["screen_name"]
         kwargs = screen_dict.get("args", {})
         self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
@@ -87,7 +92,7 @@ class Display:
         self.screen_manager.set_screen(self.screen)
 
 
-sentry_sdk.init( # pylint: disable=abstract-class-instantiated
+sentry_sdk.init(  # pylint: disable=abstract-class-instantiated
     "https://4f39f9d71b4743bcbd3c04c5b1628799@o1136978.ingest.sentry.io/6189103",
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
