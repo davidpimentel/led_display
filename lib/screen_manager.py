@@ -1,9 +1,22 @@
+import importlib
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 from lib.screen_thread import ScreenThread
 
 
 class ScreenManager:
+
+    @staticmethod
+    def build_screen(screen_name, kwargs, display_indefinitely=False, duration=None):
+        screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
+        if display_indefinitely:
+            screen.display_indefinitely = True
+
+        if duration:
+            screen.duration = duration
+
+        return screen
+
     def __init__(self, on_screen_completed):
         super().__init__()
         self.on_screen_completed = on_screen_completed

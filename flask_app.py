@@ -42,8 +42,25 @@ class FlaskApp:
         return render_template("index.html", screens=self.screens)
 
     def change_screen(self):
-        screen_id = request.form["screen_id"]
-        self.on_change_screen(screen_id)
+        kwargs = request.form.copy()
+        print(kwargs)
+        screen_id = kwargs.pop("screen_id")
+
+        if kwargs.get("display_indefinitely"):
+            display_indefinitely = True
+            kwargs.pop("display_indefinitely")
+        else:
+            display_indefinitely = False
+
+        if kwargs.get("duration"):
+            try:
+                duration = int(kwargs.pop("duration"))
+            except:
+                duration = None
+        else:
+            duration = None
+
+        self.on_change_screen(screen_id, kwargs, display_indefinitely, duration)
         return redirect("/")
 
     def default_screen(self):

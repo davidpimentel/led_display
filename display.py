@@ -1,7 +1,3 @@
-import importlib
-import json
-
-import sentry_sdk
 import yaml
 from dotenv import load_dotenv
 
@@ -20,9 +16,7 @@ class Display:
         self.screen = None
         self.screen_id = None
         self.screens = config["screens"]
-        self.load_screen(
-            self.screens[0]["id"]
-        )  # pick the first screen in the dict to start
+        self.set_to_default()
 
         # Web app
         self.flask_app = FlaskApp(
@@ -37,42 +31,35 @@ class Display:
         self.flask_app.start()
 
     def set_to_default(self):
-        self.load_screen(self.screens[0]["id"], display_indefinitely=True)
+        self.load_screen(self.screens[0]["id"], {}, display_indefinitely=True)
 
-    def override_screen(self, screen_id):
-        self.load_screen(screen_id, display_indefinitely=True)
+    def override_screen(self, screen_id, kwargs):
+        self.load_screen(screen_id, kwargs, display_indefinitely=True)
 
-    def change_screen(self, screen_id):
-        self.load_screen(screen_id)
+    def change_screen(self, screen_id, kwargs, display_indefinitely, duration):
+        self.load_screen(screen_id, kwargs, display_indefinitely, duration)
 
     def turn_off_screen(self):
         self.screen.set_screen(None)
         self.screen = None
         self.screen_id = None
 
-    def load_screen(self, screen_id, display_indefinitely=False):
+    def load_screen(self, screen_id, kwargs, display_indefinitely=False, duration=None):
         screen_dict = next(
             (screen for screen in self.screens if screen["id"] == screen_id)
         )
         screen_name = screen_dict["screen_name"]
-        kwargs = screen_dict.get("args", {})
+        merged_kwargs = {**(screen_dict.get("args", {})), **kwargs}
+        self.screen = ScreenManager.build_screen(
+            screen_name, merged_kwargs, display_indefinitely, duration
+        )
         self.screen_id = screen_id
-        self.screen = importlib.import_module("screens." + screen_name).Screen(**kwargs)
-        if display_indefinitely:
-            self.screen.display_indefinitely = True
+
         self.screen_manager.set_screen(self.screen)
 
     def get_current_screen(self):
         return self.screen_id
 
-
-sentry_sdk.init(  # pylint: disable=abstract-class-instantiated
-    "https://4f39f9d71b4743bcbd3c04c5b1628799@o1136978.ingest.sentry.io/6189103",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-)
 
 # This loads in environment variables from .env file
 load_dotenv()

@@ -32,18 +32,29 @@ class ScreenThread(Thread):
                 self.__check_screen_completed()
 
             if self.screen_complete:
-                self.on_screen_completed() # call outside of screen lock
+                self.on_screen_completed()  # call outside of screen lock
 
         self.matrix.Clear()
 
     def __check_screen_completed(self):
         if self.initial_screen_render_time is not None and self.screen is not None:
-            if self.screen.display_duration() is not None and time.time() - self.initial_screen_render_time > self.screen.display_duration():
+            if (
+                self.screen.display_duration() is not None
+                and time.time() - self.initial_screen_render_time
+                > self.screen.display_duration()
+            ):
                 self.screen_complete = True
 
-
     def __run_data(self):
-        if self.screen.fetch_data_interval() is not None and not self.__is_data_thread_running() and (not self.last_data_time or (time.time() - self.last_data_time) > self.screen.fetch_data_interval()):
+        if (
+            self.screen.fetch_data_interval() is not None
+            and not self.__is_data_thread_running()
+            and (
+                not self.last_data_time
+                or (time.time() - self.last_data_time)
+                > self.screen.fetch_data_interval()
+            )
+        ):
             self.last_data_time = time.time()
             self.data_thread = Thread(target=self.__run_fetch_data, daemon=True)
             self.data_thread.start()
@@ -52,7 +63,10 @@ class ScreenThread(Thread):
         return self.data_thread is not None and self.data_thread.is_alive()
 
     def __run_render(self):
-        if self.screen.animation_interval() is not None and (not self.last_render_time or (time.time() - self.last_render_time) > self.screen.animation_interval()):
+        if self.screen.animation_interval() is not None and (
+            not self.last_render_time
+            or (time.time() - self.last_render_time) > self.screen.animation_interval()
+        ):
             self.should_render = True
 
         if self.should_render:
@@ -67,7 +81,7 @@ class ScreenThread(Thread):
         with self.data_lock:
             old_data = self.data
             self.data = data
-            if (data != old_data):
+            if data != old_data:
                 self.should_render = True
 
     def __get_data(self):
