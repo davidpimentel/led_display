@@ -2,6 +2,7 @@ import base64
 
 from flask import Flask, redirect, render_template, request, send_from_directory
 import json
+from lib.util import cast_args
 
 
 class FlaskApp:
@@ -42,19 +43,17 @@ class FlaskApp:
         return render_template("index.html", screens=self.screens)
 
     def change_screen(self):
-        kwargs = request.form.copy()
-        print(kwargs)
+        kwargs = cast_args(request.form.copy())
         screen_id = kwargs.pop("screen_id")
 
         if kwargs.get("display_indefinitely"):
-            display_indefinitely = True
-            kwargs.pop("display_indefinitely")
+            display_indefinitely = kwargs.pop("display_indefinitely")
         else:
             display_indefinitely = False
 
         if kwargs.get("duration"):
             try:
-                duration = int(kwargs.pop("duration"))
+                duration = kwargs.pop("duration")
             except:
                 duration = None
         else:
