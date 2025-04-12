@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from lib.view_helper.text import TextScroller, right_align_text
+from lib.view_helper.text import TextScroller
 from lib.weather import get_current_weather
 from PIL import Image
 from rgbmatrix import graphics
