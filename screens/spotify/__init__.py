@@ -5,7 +5,7 @@ import requests
 import spotipy
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from lib.view_helper.text import MultilineTextOscillator, TextRenderData
+from lib.view_helper.text import MultilineTextOscillator
 from PIL import Image
 from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
@@ -19,6 +19,7 @@ class Data:
     song_name: str
     album_image_url: str
 
+
 class Screen(BaseScreen):
     def __init__(self, username=None):
         super().__init__(display_indefinitely=True)
@@ -28,8 +29,17 @@ class Screen(BaseScreen):
         self.gray = COLORS["gray"]
         cache_path = ".cache-" + username
         cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=cache_path)
-        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(open_browser=False, scope=scope, cache_handler=cache_handler))
-        self.multiline_scroller = MultilineTextOscillator()
+        self.sp = spotipy.Spotify(
+            auth_manager=SpotifyOAuth(
+                open_browser=False, scope=scope, cache_handler=cache_handler
+            )
+        )
+        self.multiline_scroller = MultilineTextOscillator(
+            font=self.font,
+            text_color=self.white,
+            positions_y=[10, 20],
+            text_colors=[self.white, self.gray],
+        )
 
     def fetch_data_interval(self):
         return 5
@@ -48,9 +58,8 @@ class Screen(BaseScreen):
         return Data(
             artist_name=artist_name,
             song_name=song_name,
-            album_image_url=album_image_url
+            album_image_url=album_image_url,
         )
-
 
     def animation_interval(self):
         return 0.05
@@ -58,9 +67,7 @@ class Screen(BaseScreen):
     def render(self, canvas, data):
 
         if data is None:
-            graphics.DrawText(
-                canvas, self.font, 4, 10, self.white, "NOTHING PLAYING"
-            )
+            graphics.DrawText(canvas, self.font, 4, 10, self.white, "NOTHING PLAYING")
             return
 
             # im = Image.open(requests.get(album_image_url, stream=True).raw)
@@ -70,22 +77,5 @@ class Screen(BaseScreen):
             #     im.convert("RGB"), offset_x=3, offset_y=3
             # )
 
-        self.multiline_scroller.scroll_text(
-            canvas,
-            [
-                TextRenderData(
-                    font=self.font,
-                    position_x=4,
-                    position_y=10,
-                    text_color=self.white,
-                    text=data.song_name
-                ),
-                TextRenderData(
-                    font=self.font,
-                    position_x=4,
-                    position_y=20,
-                    text_color=self.gray,
-                    text=data.artist_name
-                )
-            ]
-        )
+        self.multiline_scroller.update_texts([data.song_name, data.artist_name])
+        self.multiline_scroller.render(canvas)
