@@ -43,13 +43,11 @@ class Screen(BaseScreen):
 
     def fetch_data(self):
         weather = get_current_weather(self.lat, self.lon)
-        current_weather = weather["current"]
-        temp = str(int(current_weather["temp"])) + "°"
-        feels_like_temp = str(int(current_weather["feels_like"])) + "°"
+        temp = str(int(weather["main"]["temp"])) + "°"
+        feels_like_temp = str(int(weather["main"]["feels_like"])) + "°"
 
-        today_weather_description = current_weather["weather"][0]
-        description = today_weather_description["description"].upper()
-        icon_id = today_weather_description["icon"]
+        description = weather["weather"][0]["description"].upper()
+        icon_id = weather["weather"][0]["icon"]
         icon_image = Image.open(
             SCREEN_DIRECTORY + "/images/" + icon_id + ".png"
         ).convert("RGB")
