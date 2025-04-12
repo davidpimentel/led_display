@@ -5,7 +5,7 @@ import requests
 import spotipy
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from lib.view_helper.text import MultilineTextOscillator
+from lib.view_helper.text import TextOscillator
 from PIL import Image
 from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
@@ -34,11 +34,11 @@ class Screen(BaseScreen):
                 open_browser=False, scope=scope, cache_handler=cache_handler
             )
         )
-        self.multiline_scroller = MultilineTextOscillator(
-            font=self.font,
-            text_color=self.white,
-            positions_y=[10, 20],
-            text_colors=[self.white, self.gray],
+        self.song_scroller = TextOscillator(
+            font=self.font, text_color=self.white, position_y=10, delay=1
+        )
+        self.artist_scroller = TextOscillator(
+            font=self.font, text_color=self.gray, position_y=20, delay=1
         )
 
     def fetch_data_interval(self):
@@ -77,5 +77,8 @@ class Screen(BaseScreen):
             #     im.convert("RGB"), offset_x=3, offset_y=3
             # )
 
-        self.multiline_scroller.update_texts([data.song_name, data.artist_name])
-        self.multiline_scroller.render(canvas)
+        self.song_scroller.update_text(data.song_name)
+        self.artist_scroller.update_text(data.artist_name)
+
+        self.song_scroller.render(canvas)
+        self.artist_scroller.render(canvas)
