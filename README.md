@@ -30,6 +30,6 @@ To add a module:
 
 1. Create a folder with the name of your module
 1. in `__init__.py`, create a class called `Screen(BaseModule)` and implement your screen there
-1. in `config.yml`, add your screen along with it's display_name and any other args
+1. in `config.yml`, add your screen along any other args
 1. (optional) include any library code or README.md for any module specific setup
 

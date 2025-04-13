@@ -81,13 +81,23 @@ class TextOscillator:
             if self.text_length >= canvas.width:
                 self.position_x += self.modifier
 
-                if self.modifier == 1 and self.position_x < 0:
+                # if self.modifier == 1 and self.position_x < 0:
+                #     self.modifier *= -1
+                #     self.set_delay()
+                # elif (
+                #     self.modifier == -1
+                #     and self.position_x + self.text_length >= canvas.width
+                # ):
+                #     self.modifier *= -1
+                #     self.set_delay()
+
+                if (
+                    self.modifier == -1
+                    and self.position_x + self.text_length < canvas.width
+                ):
                     self.modifier *= -1
                     self.set_delay()
-                elif (
-                    self.modifier == -1
-                    and self.position_x + self.text_length >= canvas.width
-                ):
+                elif self.modifier == 1 and self.position_x > 0:
                     self.modifier *= -1
                     self.set_delay()
 
