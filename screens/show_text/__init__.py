@@ -1,14 +1,19 @@
-import random
+from dataclasses import dataclass
 
 from lib.colors import COLORS
 from lib.fonts import FONTS
-from screens.base_screen import BaseScreen
 from lib.view_helper.text import TextScroller
+from screens.stateful_screen import StatefulScreen
 
 
-class Screen(BaseScreen):
+@dataclass
+class ShowTextState:
+    text: str = ""
+
+
+class Screen(StatefulScreen[ShowTextState]):
     def __init__(self, text=""):
-        super().__init__()
+        super().__init__(initial_state=ShowTextState(text=text))
         self.font = FONTS["5x8"]
         self.font_height = self.font.height
         self.white = COLORS["white"]
@@ -17,11 +22,13 @@ class Screen(BaseScreen):
             text_color=self.white,
             position_y=16 + (self.font_height / 2),
         )
-        self.text = text
-        self.text_scroller.update_text(self.text)
 
-    def animation_interval(self):
-        return 1 / 32
+    def setup(self):
+        self.create_interval(self._animate, seconds=1 / 32)
 
-    def render(self, canvas, data):
+    def _animate(self):
+        self.set_state()
+
+    def _render(self, canvas, state: ShowTextState):
+        self.text_scroller.update_text(state.text)
         self.text_scroller.render(canvas)
