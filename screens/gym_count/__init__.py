@@ -32,7 +32,7 @@ class Screen(StatefulScreen[GymCountState]):
         )
         people_at_gym = response.read().decode("utf-8")
         weather = get_current_weather("40.722518", "-73.954734")  # Vital location
-        feels_like_temp = str(int(weather["current"]["feels_like"]))
+        feels_like_temp = str(int(weather["main"]["feels_like"]))
         self.set_state(
             people_at_gym=people_at_gym,
             feels_like_temp=feels_like_temp,
