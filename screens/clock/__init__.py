@@ -1,28 +1,30 @@
+from dataclasses import dataclass
 from datetime import datetime
 
 import pytz
 from lib.colors import COLORS
 from lib.fonts import FONTS
 from num2words import num2words
-from PIL import Image
 from rgbmatrix import graphics
-from screens.base_screen import BaseScreen
+from screens.stateful_screen import StatefulScreen
 
 
-class Screen(BaseScreen):
+@dataclass
+class ClockState:
+    hour: int = 0
+    minute: int = 0
+
+
+class Screen(StatefulScreen[ClockState]):
     def __init__(self):
-        super().__init__(display_indefinitely=True)
+        super().__init__(initial_state=ClockState(), display_indefinitely=True)
         self.timezone = pytz.timezone('US/Eastern')
         self.font = FONTS["6x9"]
 
+    def setup(self):
+        self.create_interval(self._fetch_time, seconds=1)
 
-    def fetch_data(self):
-        return self.get_current_hours_minutes()
-
-    def fetch_data_interval(self):
-        return 1
-
-    def get_current_hours_minutes(self):
+    def _fetch_time(self):
         current_datetime = datetime.now(tz=self.timezone)
         hour = current_datetime.hour
         if hour == 0:
@@ -30,26 +32,22 @@ class Screen(BaseScreen):
         elif hour > 12:
             hour -= 12
 
-        return (hour, current_datetime.minute)
+        self.set_state(hour=hour, minute=current_datetime.minute)
 
-    def hours_minutes_to_words(self, hours_minutes):
-        hours, minutes = hours_minutes
-        hours_words = num2words(hours)
-        minutes_words = num2words(minutes)
+    def _hours_minutes_to_words(self, hour, minute):
+        hours_words = num2words(hour)
+        minutes_words = num2words(minute)
 
-        if minutes == 0:
+        if minute == 0:
             minutes_words = "o'clock"
-        elif minutes < 10:
+        elif minute < 10:
             minutes_words = "oh " + minutes_words
 
         minutes_words = minutes_words.replace('-', ' ')
         return (hours_words + " " + minutes_words).upper()
 
-    def render(self, canvas, data):
-        current_hours_minutes = data
-        self.last_rendered_hours_minutes = current_hours_minutes
-
-        time_in_words = self.hours_minutes_to_words(current_hours_minutes)
+    def _render(self, canvas, state: ClockState):
+        time_in_words = self._hours_minutes_to_words(state.hour, state.minute)
 
         for i, word in enumerate(time_in_words.split(" ")):
             graphics.DrawText(
