@@ -1,5 +1,5 @@
-import subprocess
 from dataclasses import dataclass
+from urllib import request
 
 from lib.colors import COLORS
 from lib.fonts import FONTS
@@ -27,15 +27,10 @@ class Screen(StatefulScreen[GymCountState]):
         self.create_interval(self._fetch_data, seconds=30)
 
     def _fetch_data(self):
-        people_at_gym = str(
-            subprocess.check_output(
-                [
-                    "curl",
-                    "--silent",
-                    "https://display.safespace.io/value/live/a7796f34",
-                ]
-            ).decode("utf-8")
+        response = request.urlopen(
+            "https://display.safespace.io/value/live/a7796f34", timeout=10
         )
+        people_at_gym = response.read().decode("utf-8")
         weather = get_current_weather("40.722518", "-73.954734")  # Vital location
         feels_like_temp = str(int(weather["current"]["feels_like"]))
         self.set_state(
