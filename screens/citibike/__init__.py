@@ -29,7 +29,7 @@ class Screen(BaseScreen[CitibikeState]):
         self.station_name = station_name
 
     def setup(self):
-        self.create_interval(self._fetch_data, seconds=30)
+        self.run_on_interval(self._fetch_data, seconds=30)
 
     def _fetch_data(self):
         response = request.urlopen(

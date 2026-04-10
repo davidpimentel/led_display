@@ -39,8 +39,8 @@ class Screen(BaseScreen[SpotifyState]):
         )
 
     def setup(self):
-        self.create_interval(self._fetch_spotify, seconds=5)
-        self.create_interval(self._animate, seconds=0.05)
+        self.run_on_interval(self._fetch_spotify, seconds=5)
+        self.run_on_interval(self._animate, seconds=0.05)
 
     def _fetch_spotify(self):
         currently_playing = self.sp.currently_playing()

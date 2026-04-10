@@ -24,7 +24,7 @@ class Screen(BaseScreen[GymCountState]):
         self.green = COLORS["green"]
 
     def setup(self):
-        self.create_interval(self._fetch_data, seconds=30)
+        self.run_on_interval(self._fetch_data, seconds=30)
 
     def _fetch_data(self):
         response = request.urlopen(

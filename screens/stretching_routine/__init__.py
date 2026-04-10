@@ -36,7 +36,7 @@ class Screen(BaseScreen[StretchingState]):
         self._next_exercise()
 
     def setup(self):
-        self.create_interval(self._tick, seconds=1 / 32)
+        self.run_on_interval(self._tick, seconds=1 / 32)
 
     def _next_exercise(self):
         exercise = next(self.exercises_iter, None)

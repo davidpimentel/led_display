@@ -15,7 +15,7 @@ class Screen(BaseScreen[ColorTestState]):
         super().__init__(initial_state=ColorTestState())
 
     def setup(self):
-        self.create_interval(self._cycle, seconds=3)
+        self.run_on_interval(self._cycle, seconds=3)
 
     def _cycle(self):
         state = self.get_state()

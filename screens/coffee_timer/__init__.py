@@ -36,7 +36,7 @@ class Screen(BaseScreen[CoffeeTimerState]):
         self.progress_bar_length = 17
 
     def setup(self):
-        self.create_interval(self._tick, seconds=1)
+        self.run_on_interval(self._tick, seconds=1)
 
     def _tick(self):
         elapsed_seconds = time.time() - self.start_time

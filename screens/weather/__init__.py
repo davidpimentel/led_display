@@ -34,8 +34,8 @@ class Screen(BaseScreen[WeatherState]):
         )
 
     def setup(self):
-        self.create_interval(self._fetch_weather, seconds=60)
-        self.create_interval(self._animate, seconds=0.04)
+        self.run_on_interval(self._fetch_weather, seconds=60)
+        self.run_on_interval(self._animate, seconds=0.04)
 
     def _fetch_weather(self):
         weather = get_current_weather(self.lat, self.lon)

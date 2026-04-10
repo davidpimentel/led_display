@@ -26,7 +26,7 @@ class Screen(BaseScreen[SubwayState]):
         self.lineColor = COLORS["gray"]
 
     def setup(self):
-        self.create_interval(self._fetch_subway, seconds=30)
+        self.run_on_interval(self._fetch_subway, seconds=30)
 
     def _fetch_subway(self):
         trip = SubwayTimes(train="G")

@@ -24,7 +24,7 @@ class Screen(BaseScreen[ShowTextState]):
         )
 
     def setup(self):
-        self.create_interval(self._animate, seconds=1 / 32)
+        self.run_on_interval(self._animate, seconds=1 / 32)
 
     def _animate(self):
         self.set_state()

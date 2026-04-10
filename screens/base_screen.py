@@ -31,7 +31,7 @@ class BaseScreen(Generic[S]):
         with self._state_lock:
             return copy.copy(self._state)
 
-    def create_interval(self, fn, seconds: float, immediate: bool = True):
+    def run_on_interval(self, fn, seconds: float, immediate: bool = True):
         def _loop():
             if not immediate:
                 self._stop_event.wait(timeout=seconds)

@@ -22,7 +22,7 @@ class Screen(BaseScreen[ClockState]):
         self.font = FONTS["6x9"]
 
     def setup(self):
-        self.create_interval(self._fetch_time, seconds=1)
+        self.run_on_interval(self._fetch_time, seconds=1)
 
     def _fetch_time(self):
         current_datetime = datetime.now(tz=self.timezone)

@@ -29,7 +29,7 @@ class Screen(BaseScreen[FantasyFootballState]):
         self.font = FONTS["4x6"]
 
     def setup(self):
-        self.create_interval(self._fetch_scores, seconds=30)
+        self.run_on_interval(self._fetch_scores, seconds=30)
 
     def _fetch_scores(self):
         if self.fetcher is None:
