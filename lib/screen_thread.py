@@ -35,7 +35,7 @@ class ScreenThread(Thread):
                 self.__check_screen_completed()
 
             if self.screen_complete:
-                self.on_screen_completed()  # call outside of screen lock
+                break
 
             time.sleep(0.001)
 
@@ -43,6 +43,9 @@ class ScreenThread(Thread):
             self.screen.cleanup()
 
         self.matrix.Clear()
+
+        if self.screen_complete and self.on_screen_completed:
+            Thread(target=self.on_screen_completed, daemon=True).start()
 
     def __check_screen_completed(self):
         if self.initial_screen_render_time is not None and self.screen is not None:
