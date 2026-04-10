@@ -1,6 +1,4 @@
 import os
-import random
-import time
 from dataclasses import dataclass
 
 from lib.colors import COLORS
@@ -9,22 +7,22 @@ from lib.view_helper.text import TextScroller
 from lib.weather import get_current_weather
 from PIL import Image
 from rgbmatrix import graphics
-from screens.base_screen import BaseScreen
+from screens.stateful_screen import StatefulScreen
 
 SCREEN_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 
 @dataclass
-class Data:
-    temp: str
-    feels_like_temp: str
-    description: str
-    icon_image: str
+class WeatherState:
+    temp: str = ""
+    feels_like_temp: str = ""
+    description: str = ""
+    icon_image: Image.Image = None
 
 
-class Screen(BaseScreen):
+class Screen(StatefulScreen[WeatherState]):
     def __init__(self, lat=None, lon=None):
-        super().__init__()
+        super().__init__(initial_state=WeatherState())
         self.lat = lat
         self.lon = lon
         self.scroll_font = FONTS["5x8"]
@@ -35,13 +33,11 @@ class Screen(BaseScreen):
             font=self.scroll_font, text_color=self.white, position_y=28
         )
 
-    def fetch_data_interval(self):
-        return 60
+    def setup(self):
+        self.create_interval(self._fetch_weather, seconds=60)
+        self.create_interval(self._animate, seconds=0.04)
 
-    def animation_interval(self):
-        return 0.04
-
-    def fetch_data(self):
+    def _fetch_weather(self):
         weather = get_current_weather(self.lat, self.lon)
         temp = str(int(weather["main"]["temp"])) + "°"
         feels_like_temp = str(int(weather["main"]["feels_like"])) + "°"
@@ -51,28 +47,34 @@ class Screen(BaseScreen):
         icon_image = Image.open(
             SCREEN_DIRECTORY + "/images/" + icon_id + ".png"
         ).convert("RGB")
-        return Data(
+
+        self.set_state(
             temp=temp,
             feels_like_temp=feels_like_temp,
             description=description,
             icon_image=icon_image,
         )
 
-    def render(self, canvas, data):
-        if data is not None:
-            self.text_scroller.update_text(data.description)
-            self.text_scroller.render(canvas)
+    def _animate(self):
+        self.set_state()
 
-            canvas.SetImage(data.icon_image, 4, 4)
+    def _render(self, canvas, state: WeatherState):
+        if state.icon_image is None:
+            return
 
-            hi_temp_len = graphics.DrawText(
-                canvas, self.temp_font, 25, 16, self.white, data.temp
-            )
-            graphics.DrawText(
-                canvas,
-                self.temp_font,
-                28 + hi_temp_len,
-                16,
-                self.gray,
-                data.feels_like_temp,
-            )
+        self.text_scroller.update_text(state.description)
+        self.text_scroller.render(canvas)
+
+        canvas.SetImage(state.icon_image, 4, 4)
+
+        hi_temp_len = graphics.DrawText(
+            canvas, self.temp_font, 25, 16, self.white, state.temp
+        )
+        graphics.DrawText(
+            canvas,
+            self.temp_font,
+            28 + hi_temp_len,
+            16,
+            self.gray,
+            state.feels_like_temp,
+        )

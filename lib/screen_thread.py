@@ -25,6 +25,9 @@ class ScreenThread(Thread):
         self.stop_run.set()
 
     def run(self):
+        if hasattr(self.screen, "setup"):
+            self.screen.setup()
+
         while not self.stop_run.is_set():
             if self.screen is not None:
                 self.__run_data()
@@ -33,6 +36,11 @@ class ScreenThread(Thread):
 
             if self.screen_complete:
                 self.on_screen_completed()  # call outside of screen lock
+
+            time.sleep(0.001)
+
+        if hasattr(self.screen, "cleanup"):
+            self.screen.cleanup()
 
         self.matrix.Clear()
 
@@ -63,6 +71,10 @@ class ScreenThread(Thread):
         return self.data_thread is not None and self.data_thread.is_alive()
 
     def __run_render(self):
+        if hasattr(self.screen, "_render_requested") and self.screen._render_requested:
+            self.should_render = True
+            self.screen._render_requested = False
+
         if self.screen.animation_interval() is not None and (
             not self.last_render_time
             or (time.time() - self.last_render_time) > self.screen.animation_interval()
