@@ -1,4 +1,3 @@
-import asyncio
 import copy
 from dataclasses import replace
 from threading import Event, Lock, Thread
@@ -42,17 +41,13 @@ class StatefulScreen(BaseScreen, Generic[S]):
 
     def create_interval(self, fn, seconds: float, immediate: bool = True):
         def _loop():
-            is_coroutine = asyncio.iscoroutinefunction(fn)
             first = True
             while not self._stop_event.is_set():
                 if first and not immediate:
                     first = False
                 else:
                     try:
-                        if is_coroutine:
-                            asyncio.run(fn())
-                        else:
-                            fn()
+                        fn()
                     except Exception:
                         pass
                     first = False
