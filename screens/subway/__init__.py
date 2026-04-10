@@ -1,14 +1,22 @@
+from dataclasses import dataclass
+
 from lib.colors import COLORS
 from lib.fonts import FONTS
 from lib.subway_times import SubwayTimes
 from PIL import Image
 from rgbmatrix import graphics
-from screens.base_screen import BaseScreen
+from screens.stateful_screen import StatefulScreen
 
 
-class Screen(BaseScreen):
+@dataclass
+class SubwayState:
+    court_sq: str = ""
+    church_ave: str = ""
+
+
+class Screen(StatefulScreen[SubwayState]):
     def __init__(self):
-        super().__init__()
+        super().__init__(initial_state=SubwayState())
         self.g_train_logo = Image.open("./images/subway_g.png").convert("RGB")
         self.g_train_logo.thumbnail((11, 11), Image.NEAREST)
 
@@ -17,14 +25,12 @@ class Screen(BaseScreen):
         self.clockColor = COLORS["yellow"]
         self.lineColor = COLORS["gray"]
 
-    def animation_interval(self):
-        return 30
+    def setup(self):
+        self.create_interval(self._fetch_subway, seconds=30)
 
-    def render(self, canvas, data):
+    def _fetch_subway(self):
         trip = SubwayTimes(train="G")
 
-        # NOTE: This gets all upcoming arrivals to the given station (Nassau in this case).
-        # If you want to implement filtering based on a threshold of minutes you can do it here.
         court_sq_arrivals = trip.arrivals_for(stop_id="G28N", direction="N")
         church_ave_arrivals = trip.arrivals_for(stop_id="G28S", direction="S")
 
@@ -38,6 +44,12 @@ class Screen(BaseScreen):
         else:
             church_ave = f"{church_ave_arrivals[0].minutes_away}min"
 
+        self.set_state(court_sq=court_sq, church_ave=church_ave)
+
+    def _render(self, canvas, state: SubwayState):
+        if not state.court_sq:
+            return
+
         canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=2)
         graphics.DrawText(
             canvas, self.font, 18, 7, self.stationColor, "COURT SQ"
@@ -48,7 +60,7 @@ class Screen(BaseScreen):
             18,
             14,
             self.clockColor,
-            court_sq,
+            state.court_sq,
         )
 
         graphics.DrawLine(canvas, 0, 15, 63, 15, self.lineColor)
@@ -63,5 +75,5 @@ class Screen(BaseScreen):
             18,
             31,
             self.clockColor,
-            church_ave,
+            state.church_ave,
         )
