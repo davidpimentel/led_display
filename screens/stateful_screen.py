@@ -1,4 +1,5 @@
 import copy
+import time
 from dataclasses import replace
 from threading import Event, Lock, Thread
 from typing import Generic, TypeVar
@@ -15,7 +16,6 @@ class StatefulScreen(BaseScreen, Generic[S]):
         self._state_lock = Lock()
         self._render_requested = True
         self._stop_event = Event()
-        self._intervals: list[Thread] = []
 
     # --- Lifecycle ---
 
@@ -41,23 +41,16 @@ class StatefulScreen(BaseScreen, Generic[S]):
 
     def create_interval(self, fn, seconds: float, immediate: bool = True):
         def _loop():
-            first = True
+            if not immediate:
+                self._stop_event.wait(timeout=seconds)
             while not self._stop_event.is_set():
-                if first and not immediate:
-                    first = False
-                else:
-                    try:
-                        fn()
-                    except Exception:
-                        pass
-                    first = False
-                if self._stop_event.wait(timeout=seconds):
-                    break
+                try:
+                    fn()
+                except Exception:
+                    pass
+                self._stop_event.wait(timeout=seconds)
 
-        thread = Thread(target=_loop, daemon=True)
-        self._intervals.append(thread)
-        thread.start()
-        return thread
+        Thread(target=_loop, daemon=True).start()
 
     # --- Bridge to ScreenThread ---
 
