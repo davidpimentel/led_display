@@ -1,23 +1,27 @@
-from rgbmatrix import graphics
+from dataclasses import dataclass
+
 from screens.base_screen import BaseScreen
 
 
-class Screen(BaseScreen):
+@dataclass
+class ColorTestState:
+    red: int = 255
+    green: int = 0
+    blue: int = 0
+
+
+class Screen(BaseScreen[ColorTestState]):
     def __init__(self):
-        super().__init__()
-        self.red = 255
-        self.green = 0
-        self.blue = 0
+        super().__init__(initial_state=ColorTestState())
 
-    def animation_interval(self):
-        return 3
+    def setup(self):
+        self.run_on_interval(self._cycle, seconds=3)
 
-    def render(self, canvas, data):
-      for x in range(0, canvas.width):
-        for y in range(0, canvas.height):
-          canvas.SetPixel(x, y, self.red, self.green, self.blue)
+    def _cycle(self):
+        state = self.get_state()
+        self.set_state(red=state.green, green=state.blue, blue=state.red)
 
-      temp = self.red
-      self.red = self.green
-      self.green = self.blue
-      self.blue = temp
+    def render(self, canvas, state: ColorTestState):
+        for x in range(0, canvas.width):
+            for y in range(0, canvas.height):
+                canvas.SetPixel(x, y, state.red, state.green, state.blue)

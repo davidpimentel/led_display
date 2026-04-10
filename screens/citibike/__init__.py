@@ -1,5 +1,4 @@
 import json
-import subprocess
 from dataclasses import dataclass
 from urllib import request
 
@@ -7,20 +6,19 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
-
-from ..base_screen import BaseScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
-class Data:
-    num_bikes: str
-    num_ebikes: str
-    station_name: str
+class CitibikeState:
+    num_bikes: str = ""
+    num_ebikes: str = ""
+    station_name: str = ""
 
 
-class Screen(BaseScreen):
+class Screen(BaseScreen[CitibikeState]):
     def __init__(self, station_id=None, station_name=None):
-        super().__init__()
+        super().__init__(initial_state=CitibikeState())
         self.font = FONTS["5x8"]
         self.white = COLORS["white"]
         self.green = COLORS["green"]
@@ -30,9 +28,10 @@ class Screen(BaseScreen):
         self.station_id = station_id
         self.station_name = station_name
 
-    def fetch_data_interval(self):
-        return 30
-    def fetch_data(self):
+    def setup(self):
+        self.run_on_interval(self._fetch_data, seconds=30)
+
+    def _fetch_data(self):
         response = request.urlopen(
             "https://gbfs.citibikenyc.com/gbfs/es/station_status.json"
         )
@@ -61,47 +60,45 @@ class Screen(BaseScreen):
         else:
             station_name = self.station_name
 
-        return Data(
+        self.set_state(
             num_bikes=num_bikes,
             num_ebikes=num_ebikes,
-            station_name=station_name
+            station_name=station_name,
         )
-
-    def get_color_for_range(self, count):
-        if count < 100:
-            return self.green
 
     def text_offset(self, char):
         return 61 - len(char) * 4
 
-    def render(self, canvas, data):
-        if data is not None:
-            canvas.SetImage(self.bike.convert("RGB"), offset_x=3, offset_y=10)
+    def render(self, canvas, state: CitibikeState):
+        if not state.num_bikes:
+            return
 
-            canvas.SetImage(
-                self.ebike.convert("RGB"),
-                offset_x=self.text_offset(data.num_ebikes) - 5,
-                offset_y=23,
-            )
+        canvas.SetImage(self.bike.convert("RGB"), offset_x=3, offset_y=10)
 
-            graphics.DrawText(
-                canvas, self.font, 2, 7, self.white, data.station_name.upper()
-            )
+        canvas.SetImage(
+            self.ebike.convert("RGB"),
+            offset_x=self.text_offset(state.num_ebikes) - 5,
+            offset_y=23,
+        )
 
-            graphics.DrawText(
-                canvas,
-                self.font,
-                self.text_offset(data.num_bikes),
-                18,
-                self.white,
-                data.num_bikes,
-            )
+        graphics.DrawText(
+            canvas, self.font, 2, 7, self.white, state.station_name.upper()
+        )
 
-            graphics.DrawText(
-                canvas,
-                self.font,
-                self.text_offset(data.num_ebikes),
-                28,
-                self.white,
-                data.num_ebikes,
-            )
+        graphics.DrawText(
+            canvas,
+            self.font,
+            self.text_offset(state.num_bikes),
+            18,
+            self.white,
+            state.num_bikes,
+        )
+
+        graphics.DrawText(
+            canvas,
+            self.font,
+            self.text_offset(state.num_ebikes),
+            28,
+            self.white,
+            state.num_ebikes,
+        )

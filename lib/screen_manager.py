@@ -34,6 +34,7 @@ class ScreenManager:
     def set_screen(self, screen):
         if self.screen_thread is not None:
             self.screen_thread.stop()
+            self.screen_thread.join()
 
         self.screen_thread = ScreenThread(
             matrix=self.matrix,
