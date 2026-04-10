@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -10,7 +10,7 @@ class ColorTestState:
     blue: int = 0
 
 
-class Screen(StatefulScreen[ColorTestState]):
+class Screen(BaseScreen[ColorTestState]):
     def __init__(self):
         super().__init__(initial_state=ColorTestState())
 
@@ -21,7 +21,7 @@ class Screen(StatefulScreen[ColorTestState]):
         state = self.get_state()
         self.set_state(red=state.green, green=state.blue, blue=state.red)
 
-    def _render(self, canvas, state: ColorTestState):
+    def render(self, canvas, state: ColorTestState):
         for x in range(0, canvas.width):
             for y in range(0, canvas.height):
                 canvas.SetPixel(x, y, state.red, state.green, state.blue)

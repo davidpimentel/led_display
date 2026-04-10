@@ -5,7 +5,7 @@ from lib.fonts import FONTS
 from lib.subway_times import SubwayTimes
 from PIL import Image
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -14,7 +14,7 @@ class SubwayState:
     church_ave: str = ""
 
 
-class Screen(StatefulScreen[SubwayState]):
+class Screen(BaseScreen[SubwayState]):
     def __init__(self):
         super().__init__(initial_state=SubwayState())
         self.g_train_logo = Image.open("./images/subway_g.png").convert("RGB")
@@ -46,7 +46,7 @@ class Screen(StatefulScreen[SubwayState]):
 
         self.set_state(court_sq=court_sq, church_ave=church_ave)
 
-    def _render(self, canvas, state: SubwayState):
+    def render(self, canvas, state: SubwayState):
         if not state.court_sq:
             return
 

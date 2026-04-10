@@ -6,7 +6,7 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 SCREEN_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
@@ -18,7 +18,7 @@ class CoffeeTimerState:
     completed_animation_counter: int = 0
 
 
-class Screen(StatefulScreen[CoffeeTimerState]):
+class Screen(BaseScreen[CoffeeTimerState]):
     def __init__(self, total_time_in_seconds=240):
         super().__init__(
             initial_state=CoffeeTimerState(),
@@ -53,7 +53,7 @@ class Screen(StatefulScreen[CoffeeTimerState]):
             completed_animation_counter=counter,
         )
 
-    def _render(self, canvas, state: CoffeeTimerState):
+    def render(self, canvas, state: CoffeeTimerState):
         canvas.SetImage(self.french_press_img, 3, 3)
 
         if state.complete_ratio < 1.0:

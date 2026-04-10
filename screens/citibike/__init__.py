@@ -6,7 +6,7 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -16,7 +16,7 @@ class CitibikeState:
     station_name: str = ""
 
 
-class Screen(StatefulScreen[CitibikeState]):
+class Screen(BaseScreen[CitibikeState]):
     def __init__(self, station_id=None, station_name=None):
         super().__init__(initial_state=CitibikeState())
         self.font = FONTS["5x8"]
@@ -69,7 +69,7 @@ class Screen(StatefulScreen[CitibikeState]):
     def text_offset(self, char):
         return 61 - len(char) * 4
 
-    def _render(self, canvas, state: CitibikeState):
+    def render(self, canvas, state: CitibikeState):
         if not state.num_bikes:
             return
 

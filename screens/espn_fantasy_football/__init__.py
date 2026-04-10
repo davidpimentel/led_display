@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from lib.colors import COLORS
 from lib.fonts import FONTS
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 from .fetch_matchup import FantasyFetcher
 
@@ -16,7 +16,7 @@ class FantasyFootballState:
     their_projected: str = "--"
 
 
-class Screen(StatefulScreen[FantasyFootballState]):
+class Screen(BaseScreen[FantasyFootballState]):
     def __init__(self, espn_s2=None, swid=None, league_id=None, team_id=None):
         super().__init__(
             initial_state=FantasyFootballState(), display_indefinitely=True
@@ -45,7 +45,7 @@ class Screen(StatefulScreen[FantasyFootballState]):
                 their_projected=str(result.opponent_team.projected),
             )
 
-    def _render(self, canvas, state: FantasyFootballState):
+    def render(self, canvas, state: FantasyFootballState):
         graphics.DrawText(canvas, self.font, 4, 10, COLORS["white"], state.your_score)
         graphics.DrawText(
             canvas, self.font, 4, 20, COLORS["gray"], state.your_projected

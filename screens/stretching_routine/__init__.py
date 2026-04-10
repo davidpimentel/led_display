@@ -8,7 +8,7 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from lib.view_helper.text import TextOscillator, right_align_text
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -20,7 +20,7 @@ class StretchingState:
     done: bool = False
 
 
-class Screen(StatefulScreen[StretchingState]):
+class Screen(BaseScreen[StretchingState]):
     def __init__(self, config="{}"):
         super().__init__(
             initial_state=StretchingState(rest_time_start=time.time()),
@@ -66,7 +66,7 @@ class Screen(StatefulScreen[StretchingState]):
             else:
                 self.set_state()
 
-    def _render(self, canvas, state: StretchingState):
+    def render(self, canvas, state: StretchingState):
         if state.done:
             graphics.DrawText(
                 canvas,

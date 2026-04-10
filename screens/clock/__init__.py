@@ -6,7 +6,7 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from num2words import num2words
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -15,7 +15,7 @@ class ClockState:
     minute: int = 0
 
 
-class Screen(StatefulScreen[ClockState]):
+class Screen(BaseScreen[ClockState]):
     def __init__(self):
         super().__init__(initial_state=ClockState(), display_indefinitely=True)
         self.timezone = pytz.timezone('US/Eastern')
@@ -46,7 +46,7 @@ class Screen(StatefulScreen[ClockState]):
         minutes_words = minutes_words.replace('-', ' ')
         return (hours_words + " " + minutes_words).upper()
 
-    def _render(self, canvas, state: ClockState):
+    def render(self, canvas, state: ClockState):
         time_in_words = self._hours_minutes_to_words(state.hour, state.minute)
 
         for i, word in enumerate(time_in_words.split(" ")):

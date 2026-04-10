@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from lib.colors import COLORS
 from lib.fonts import FONTS
 from lib.view_helper.text import TextScroller
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -11,7 +11,7 @@ class ShowTextState:
     text: str = ""
 
 
-class Screen(StatefulScreen[ShowTextState]):
+class Screen(BaseScreen[ShowTextState]):
     def __init__(self, text=""):
         super().__init__(initial_state=ShowTextState(text=text))
         self.font = FONTS["5x8"]
@@ -29,6 +29,6 @@ class Screen(StatefulScreen[ShowTextState]):
     def _animate(self):
         self.set_state()
 
-    def _render(self, canvas, state: ShowTextState):
+    def render(self, canvas, state: ShowTextState):
         self.text_scroller.update_text(state.text)
         self.text_scroller.render(canvas)

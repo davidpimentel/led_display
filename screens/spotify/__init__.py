@@ -6,7 +6,7 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from lib.view_helper.text import TextOscillator
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 from spotipy.oauth2 import SpotifyOAuth
 
 
@@ -17,7 +17,7 @@ class SpotifyState:
     is_playing: bool = False
 
 
-class Screen(StatefulScreen[SpotifyState]):
+class Screen(BaseScreen[SpotifyState]):
     def __init__(self, username=None):
         super().__init__(initial_state=SpotifyState(), display_indefinitely=True)
         scope = "user-read-currently-playing"
@@ -62,7 +62,7 @@ class Screen(StatefulScreen[SpotifyState]):
     def _animate(self):
         self.set_state()
 
-    def _render(self, canvas, state: SpotifyState):
+    def render(self, canvas, state: SpotifyState):
         if not state.is_playing:
             graphics.DrawText(canvas, self.font, 4, 10, self.white, "NOTHING PLAYING")
             return

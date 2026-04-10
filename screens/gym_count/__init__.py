@@ -6,7 +6,7 @@ from lib.fonts import FONTS
 from lib.weather import get_current_weather
 from PIL import Image
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -15,7 +15,7 @@ class GymCountState:
     feels_like_temp: str = ""
 
 
-class Screen(StatefulScreen[GymCountState]):
+class Screen(BaseScreen[GymCountState]):
     def __init__(self):
         super().__init__(initial_state=GymCountState())
         self.vital_logo = Image.open("./images/vital_logo.png")
@@ -38,7 +38,7 @@ class Screen(StatefulScreen[GymCountState]):
             feels_like_temp=feels_like_temp,
         )
 
-    def _render(self, canvas, state: GymCountState):
+    def render(self, canvas, state: GymCountState):
         if not state.people_at_gym:
             return
 

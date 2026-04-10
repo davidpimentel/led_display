@@ -7,7 +7,7 @@ from lib.view_helper.text import TextScroller
 from lib.weather import get_current_weather
 from PIL import Image
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 SCREEN_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
@@ -20,7 +20,7 @@ class WeatherState:
     icon_image: Image.Image = None
 
 
-class Screen(StatefulScreen[WeatherState]):
+class Screen(BaseScreen[WeatherState]):
     def __init__(self, lat=None, lon=None):
         super().__init__(initial_state=WeatherState())
         self.lat = lat
@@ -58,7 +58,7 @@ class Screen(StatefulScreen[WeatherState]):
     def _animate(self):
         self.set_state()
 
-    def _render(self, canvas, state: WeatherState):
+    def render(self, canvas, state: WeatherState):
         if state.icon_image is None:
             return
 

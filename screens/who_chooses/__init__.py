@@ -5,7 +5,7 @@ from lib.colors import COLORS
 from lib.fonts import FONTS
 from PIL import Image
 from rgbmatrix import graphics
-from screens.stateful_screen import StatefulScreen
+from screens.base_screen import BaseScreen
 
 
 @dataclass
@@ -13,7 +13,7 @@ class WhoChoosesState:
     rand_int: int = 0
 
 
-class Screen(StatefulScreen[WhoChoosesState]):
+class Screen(BaseScreen[WhoChoosesState]):
     def __init__(self):
         super().__init__(initial_state=WhoChoosesState(rand_int=random.randint(0, 1)))
         self.font = FONTS["5x8"]
@@ -26,7 +26,7 @@ class Screen(StatefulScreen[WhoChoosesState]):
             (Image.open("images/nicole.png").convert("RGB"), "NICOLE", self.teal),
         ]
 
-    def _render(self, canvas, state: WhoChoosesState):
+    def render(self, canvas, state: WhoChoosesState):
         image, name, name_color = self.images[state.rand_int]
 
         graphics.DrawText(
