@@ -1,7 +1,5 @@
-try:
-    from rgbmatrix import graphics
-except ImportError:
-    from RGBMatrixEmulator import graphics
+from rgbmatrix import graphics
+
 
 class Color:
     def __init__(self, r, g, b):
