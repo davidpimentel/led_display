@@ -47,5 +47,8 @@ class BaseScreen(Generic[S]):
     def display_duration(self):
         return None if self.display_indefinitely else self.duration
 
+    def build(self, state: S):
+        return None
+
     def render(self, canvas, state: S):
         raise NotImplementedError("Subclasses must implement render()")

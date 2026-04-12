@@ -1,6 +1,8 @@
 import time
 from threading import Event, Thread
 
+from lib.ui import render_to_canvas
+
 
 class ScreenThread(Thread):
     def __init__(self, matrix=None, screen=None, on_screen_completed=None):
@@ -52,6 +54,11 @@ class ScreenThread(Thread):
     def __run_render(self):
         if self.screen._render_requested:
             self.screen._render_requested = False
+            state = self.screen.get_state()
             self.offscreen_canvas.Clear()
-            self.screen.render(self.offscreen_canvas, self.screen.get_state())
+            widget = self.screen.build(state)
+            if widget is not None:
+                render_to_canvas(self.offscreen_canvas, widget)
+            else:
+                self.screen.render(self.offscreen_canvas, state)
             self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
