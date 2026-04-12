@@ -25,8 +25,8 @@ class Screen(BaseScreen[SpotifyState]):
                 open_browser=False, scope=scope, cache_handler=cache_handler
             )
         )
-        self.song_oscillator = Oscillate(font="4x6", delay=5)
-        self.artist_oscillator = Oscillate(font="4x6", delay=5)
+        self.song_oscillator = Oscillate(font="5x8", delay=5)
+        self.artist_oscillator = Oscillate(font="5x8", delay=5)
 
     def setup(self):
         self.run_on_interval(self._fetch_spotify, seconds=5)
@@ -57,10 +57,11 @@ class Screen(BaseScreen[SpotifyState]):
     def build(self, state: SpotifyState):
         if not state.is_playing:
             return Stack(children=[
-                Positioned(x=4, y=4, child=Text("NOTHING PLAYING", font="4x6", color=Colors.white))
+                Positioned(x=10, y=8, child=Text("NOTHING", font="6x9", color=Colors.white)),
+                Positioned(x=10, y=18, child=Text("PLAYING", font="6x9", color=Colors.white))
             ])
 
         return Stack(children=[
-            Padding(AnimatedText(state.song_name, font="4x6", color=Colors.white, animator=self.song_oscillator), left=4, top=8),
-            Padding(AnimatedText(state.artist_name, font="4x6", color=Colors.white.dimmed(0.5), animator=self.artist_oscillator), left=4, top=18),
+            Padding(AnimatedText(state.song_name, font="5x8", color=Colors.white, animator=self.song_oscillator), left=4, top=8),
+            Padding(AnimatedText(state.artist_name, font="5x8", color=Colors.white.dimmed(0.5), animator=self.artist_oscillator), left=4, top=18),
         ])
