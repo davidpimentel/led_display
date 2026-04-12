@@ -7,9 +7,11 @@ S = TypeVar("S")
 
 
 class BaseScreen(Generic[S]):
-    def __init__(self, initial_state: S, display_indefinitely=False, duration=30):
+    def __init__(self, initial_state: S, display_indefinitely=False, duration=30, width=64, height=32):
         self.display_indefinitely = display_indefinitely
         self.duration = duration
+        self.width = width
+        self.height = height
         self._state = initial_state
         self._state_lock = Lock()
         self._render_requested = True
