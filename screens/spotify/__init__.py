@@ -61,6 +61,6 @@ class Screen(BaseScreen[SpotifyState]):
             ])
 
         return Stack(children=[
-            Padding(Positioned(x=0, y=4, child=AnimatedText(state.song_name, font="4x6", color=Colors.white, animator=self.song_oscillator)), left=5),
-            Padding(Positioned(x=0, y=14, child=AnimatedText(state.artist_name, font="4x6", color=Colors.blue, animator=self.artist_oscillator)), left=5),
+            Padding(AnimatedText(state.song_name, font="4x6", color=Colors.white, animator=self.song_oscillator)), left=5, top=4),
+            Padding(AnimatedText(state.artist_name, font="4x6", color=Colors.blue, animator=self.artist_oscillator)), left=5, top=14),
         ])
