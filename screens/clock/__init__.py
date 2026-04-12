@@ -2,10 +2,9 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import pytz
-from lib.colors import COLORS
-from lib.fonts import FONTS
+from lib.colors import Colors
+from lib.ui import Positioned, Stack, Text
 from num2words import num2words
-from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
 
 
@@ -19,7 +18,6 @@ class Screen(BaseScreen[ClockState]):
     def __init__(self):
         super().__init__(initial_state=ClockState(), display_indefinitely=True)
         self.timezone = pytz.timezone('US/Eastern')
-        self.font = FONTS["6x9"]
 
     def setup(self):
         self.run_on_interval(self._fetch_time, seconds=1)
@@ -46,15 +44,11 @@ class Screen(BaseScreen[ClockState]):
         minutes_words = minutes_words.replace('-', ' ')
         return (hours_words + " " + minutes_words).upper()
 
-    def render(self, canvas, state: ClockState):
-        time_in_words = self._hours_minutes_to_words(state.hour, state.minute)
-
-        for i, word in enumerate(time_in_words.split(" ")):
-            graphics.DrawText(
-                canvas,
-                self.font,
-                3,
-                10 + i * 9,
-                COLORS["white"],
-                word
-            )
+    def build(self, state: ClockState):
+        words = self._hours_minutes_to_words(state.hour, state.minute).split(" ")
+        return Stack(children=[
+            Positioned(x=3, y=1, child=Stack(children=[
+                Positioned(x=0, y=i * 9, child=Text(w, font="6x9", color=Colors.white))
+                for i, w in enumerate(words)
+            ]))
+        ])
