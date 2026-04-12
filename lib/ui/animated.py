@@ -11,63 +11,55 @@ class Offset:
 
 
 class Scroll:
-    def __init__(self, font: str, width: int):
+    def __init__(self, font: str):
         self.font_name = font
-        self.width = width
         self._text = ""
         self._text_length = 0
         self._position_x = 0
-        self._initialized = False
+        self._width = 0
 
     def set_text(self, text):
         if text != self._text:
             self._text = text
             self._text_length = FontRegistry.text_width(self.font_name, text)
-            self._initialized = False
+            self._position_x = self._width
 
     def tick(self):
-        if not self._initialized:
-            self._position_x = self.width
-            self._initialized = True
-
         self._position_x -= 1
         if self._position_x + self._text_length < 0:
-            self._position_x = self.width
+            self._position_x = self._width
 
+    def offset(self, width, height=0):
+        self._width = width
         return Offset(x=self._position_x)
 
 
 class Oscillate:
-    def __init__(self, font: str, width: int, delay: float = 1):
+    def __init__(self, font: str, delay: float = 1):
         self.font_name = font
-        self.width = width
         self.delay = delay
         self._text = ""
         self._text_length = 0
         self._position_x = 0
         self._modifier = -1
-        self._initialized = False
+        self._width = 0
         self._delay_timestamp = None
 
     def set_text(self, text):
         if text != self._text:
             self._text = text
             self._text_length = FontRegistry.text_width(self.font_name, text)
-            self._initialized = False
-
-    def tick(self):
-        if not self._initialized:
             self._position_x = 0
             self._modifier = -1
-            self._initialized = True
 
+    def tick(self):
         if not self._is_delayed():
-            if self._text_length >= self.width:
+            if self._text_length >= self._width:
                 self._position_x += self._modifier
 
                 if (
                     self._modifier == -1
-                    and self._position_x + self._text_length < self.width
+                    and self._position_x + self._text_length < self._width
                 ):
                     self._modifier *= -1
                     self._set_delay()
@@ -75,6 +67,8 @@ class Oscillate:
                     self._modifier *= -1
                     self._set_delay()
 
+    def offset(self, width, height=0):
+        self._width = width
         return Offset(x=self._position_x)
 
     def _set_delay(self):

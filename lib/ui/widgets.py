@@ -20,6 +20,17 @@ class Text(Widget):
         graphics.DrawText(canvas, self.font, x, y + self.font.baseline, self.color.graphics, self.text)
 
 
+class AnimatedText(Text):
+    def __init__(self, text: str, font: str = "5x8", color: Color = None, animator=None):
+        super().__init__(text, font, color)
+        self.animator = animator
+        self.animator.set_text(text)
+
+    def paint(self, canvas, x, y, available_width, available_height):
+        offset = self.animator.offset(available_width, available_height)
+        super().paint(canvas, x + offset.x, y + offset.y, available_width, available_height)
+
+
 class Rect(Widget):
     def __init__(self, width: int, height: int, color: Color = None, filled: bool = True):
         self.w = width
