@@ -1,4 +1,5 @@
 import time
+import math
 from dataclasses import dataclass
 
 from lib.fonts import FontRegistry
@@ -50,7 +51,7 @@ class Oscillate:
             self._text = text
             self._text_length = FontRegistry.text_width(self.font_name, text)
             self._position_x = 0
-            self._modifier = -1
+            self._modifier = -0.5
 
     def tick(self):
         if not self._is_delayed():
@@ -58,18 +59,18 @@ class Oscillate:
                 self._position_x += self._modifier
 
                 if (
-                    self._modifier == -1
+                    self._modifier < 0
                     and self._position_x + self._text_length < self._width
                 ):
                     self._modifier *= -1
                     self._set_delay()
-                elif self._modifier == 1 and self._position_x > 0:
+                elif self._modifier > 0 and self._position_x > 0:
                     self._modifier *= -1
                     self._set_delay()
 
     def offset(self, width, height=0):
         self._width = width
-        return Offset(x=self._position_x)
+        return Offset(x=math.floor(self._position_x))
 
     def _set_delay(self):
         self._delay_timestamp = time.time()
