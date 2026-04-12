@@ -47,7 +47,7 @@ class Screen(BaseScreen[ClockState]):
     def build(self, state: ClockState):
         words = self._hours_minutes_to_words(state.hour, state.minute).split(" ")
         return Stack(children=[
-            Positioned(x=3, y=1, child=Stack(children=[
+            Positioned(x=3, y=2, child=Stack(children=[
                 Positioned(x=0, y=i * 9, child=Text(w, font="6x9", color=Colors.white))
                 for i, w in enumerate(words)
             ]))

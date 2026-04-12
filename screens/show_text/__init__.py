@@ -1,34 +1,31 @@
 from dataclasses import dataclass
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
-from lib.view_helper.text import TextScroller
+from lib.colors import Colors
+from lib.ui import Offset, Positioned, Scroll, Stack, Text
 from screens.base_screen import BaseScreen
 
 
 @dataclass
 class ShowTextState:
     text: str = ""
+    scroll_offset: Offset = None
 
 
 class Screen(BaseScreen[ShowTextState]):
     def __init__(self, text=""):
         super().__init__(initial_state=ShowTextState(text=text))
-        self.font = FONTS["5x8"]
-        self.font_height = self.font.height
-        self.white = COLORS["white"]
-        self.text_scroller = TextScroller(
-            font=self.font,
-            text_color=self.white,
-            position_y=16 + (self.font_height / 2),
-        )
+        self.scroller = Scroll(font="5x8", width=self.width)
 
     def setup(self):
         self.run_on_interval(self._animate, seconds=1 / 32)
 
     def _animate(self):
-        self.set_state()
+        state = self.get_state()
+        self.scroller.set_text(state.text)
+        self.set_state(scroll_offset=self.scroller.tick())
 
-    def render(self, canvas, state: ShowTextState):
-        self.text_scroller.update_text(state.text)
-        self.text_scroller.render(canvas)
+    def build(self, state: ShowTextState):
+        offset = state.scroll_offset or Offset()
+        return Stack(children=[
+            Positioned(x=offset.x, y=12, child=Text(state.text, font="5x8", color=Colors.white))
+        ])
