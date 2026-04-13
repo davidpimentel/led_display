@@ -15,8 +15,20 @@ class SpotifyState:
 
 
 class Screen(BaseScreen[SpotifyState]):
-    def __init__(self, username=None):
+    def __init__(self, artist_name=None, song_name=None, username=None):
+        self.song_oscillator = Oscillate(font="5x8", delay=5)
+        self.artist_oscillator = Oscillate(font="5x8", delay=5)
+        self.is_using_spotify_api = True
+        
+        # If we're getting a song name or artist name, let's just display it, else we use the spotify api
+        if (artist_name is not None or song_name is not None):
+            initial_state=SpotifyState(artist_name=artist_name.upper(), song_name=song_name.upper(), is_playing=True)
+            self.is_using_spotify_api = False
+            super().__init__(initial_state=initial_state, display_indefinitely=True)
+            return
+
         super().__init__(initial_state=SpotifyState(), display_indefinitely=True)
+        
         scope = "user-read-currently-playing"
         cache_path = ".cache-" + username
         cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=cache_path)
@@ -25,11 +37,11 @@ class Screen(BaseScreen[SpotifyState]):
                 open_browser=False, scope=scope, cache_handler=cache_handler
             )
         )
-        self.song_oscillator = Oscillate(font="5x8", delay=5)
-        self.artist_oscillator = Oscillate(font="5x8", delay=5)
 
     def setup(self):
-        self.run_on_interval(self._fetch_spotify, seconds=5)
+        if self.is_using_spotify_api:
+            self.run_on_interval(self._fetch_spotify, seconds=5)
+
         self.run_on_interval(self._animate, seconds=0.05)
 
     def _fetch_spotify(self):
