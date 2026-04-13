@@ -1,5 +1,4 @@
-from rgbmatrix import graphics
-
+from lib.matrix import graphics
 from lib.colors import Color
 from lib.fonts import FontRegistry
 from lib.ui.widget import Size, Widget

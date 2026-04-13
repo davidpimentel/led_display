@@ -1,4 +1,4 @@
-from rgbmatrix import graphics
+from lib.matrix import graphics
 
 
 class FontRegistry:

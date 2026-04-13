@@ -1,5 +1,5 @@
 import importlib
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from lib.matrix import RGBMatrix, RGBMatrixOptions
 
 from lib.screen_thread import ScreenThread
 
