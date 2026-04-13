@@ -59,6 +59,4 @@ class ScreenThread(Thread):
             widget = self.screen.build(state)
             if widget is not None:
                 render_to_canvas(self.offscreen_canvas, widget)
-            else:
-                self.screen.render(self.offscreen_canvas, state)
             self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)

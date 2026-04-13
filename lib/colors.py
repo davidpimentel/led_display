@@ -24,13 +24,3 @@ class Colors:
     yellow = Color(244, 193, 21)
     red = Color(255, 0, 0)
     blue = Color(0, 0, 255)
-
-
-# Backward compat
-COLORS = {
-    "white": Colors.white.graphics,
-    "gray": Colors.gray.graphics,
-    "green": Colors.green.graphics,
-    "teal": Colors.teal.graphics,
-    "yellow": Colors.yellow.graphics,
-}

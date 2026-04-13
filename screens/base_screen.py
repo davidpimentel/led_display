@@ -51,6 +51,3 @@ class BaseScreen(Generic[S]):
 
     def build(self, state: S):
         return None
-
-    def render(self, canvas, state: S):
-        raise NotImplementedError("Subclasses must implement render()")
