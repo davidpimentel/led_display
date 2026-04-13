@@ -1,11 +1,8 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import spotipy
-from lib.colors import COLORS
-from lib.fonts import FONTS
-from lib.view_helper.text import TextOscillator
-from rgbmatrix import graphics
+from lib.colors import Colors
+from lib.ui import AnimatedText, Oscillate, Padding, Positioned, Stack, Text
 from screens.base_screen import BaseScreen
 from spotipy.oauth2 import SpotifyOAuth
 
@@ -21,9 +18,6 @@ class Screen(BaseScreen[SpotifyState]):
     def __init__(self, username=None):
         super().__init__(initial_state=SpotifyState(), display_indefinitely=True)
         scope = "user-read-currently-playing"
-        self.font = FONTS["4x6"]
-        self.white = COLORS["white"]
-        self.gray = COLORS["gray"]
         cache_path = ".cache-" + username
         cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=cache_path)
         self.sp = spotipy.Spotify(
@@ -31,12 +25,8 @@ class Screen(BaseScreen[SpotifyState]):
                 open_browser=False, scope=scope, cache_handler=cache_handler
             )
         )
-        self.song_scroller = TextOscillator(
-            font=self.font, text_color=self.white, position_y=10, delay=1
-        )
-        self.artist_scroller = TextOscillator(
-            font=self.font, text_color=self.gray, position_y=20, delay=1
-        )
+        self.song_oscillator = Oscillate(font="5x8", delay=5)
+        self.artist_oscillator = Oscillate(font="5x8", delay=5)
 
     def setup(self):
         self.run_on_interval(self._fetch_spotify, seconds=5)
@@ -50,8 +40,8 @@ class Screen(BaseScreen[SpotifyState]):
             return
 
         item = currently_playing["item"]
-        artist_name = item["artists"][0]["name"]
-        song_name = item["name"]
+        artist_name = item["artists"][0]["name"].upper()
+        song_name = item["name"].upper()
 
         self.set_state(
             artist_name=artist_name,
@@ -60,15 +50,18 @@ class Screen(BaseScreen[SpotifyState]):
         )
 
     def _animate(self):
+        self.song_oscillator.tick()
+        self.artist_oscillator.tick()
         self.set_state()
 
-    def render(self, canvas, state: SpotifyState):
+    def build(self, state: SpotifyState):
         if not state.is_playing:
-            graphics.DrawText(canvas, self.font, 4, 10, self.white, "NOTHING PLAYING")
-            return
+            return Stack(children=[
+                Positioned(x=10, y=8, child=Text("NOTHING", font="6x9", color=Colors.white)),
+                Positioned(x=10, y=18, child=Text("PLAYING", font="6x9", color=Colors.white))
+            ])
 
-        self.song_scroller.update_text(state.song_name)
-        self.artist_scroller.update_text(state.artist_name)
-
-        self.song_scroller.render(canvas)
-        self.artist_scroller.render(canvas)
+        return Stack(children=[
+            Padding(AnimatedText(state.song_name, font="5x8", color=Colors.white, animator=self.song_oscillator), left=4, top=8),
+            Padding(AnimatedText(state.artist_name, font="5x8", color=Colors.white.dimmed(0.5), animator=self.artist_oscillator), left=4, top=18),
+        ])

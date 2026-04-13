@@ -2,10 +2,9 @@ import json
 from dataclasses import dataclass
 from urllib import request
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
+from lib.colors import Colors
+from lib.ui import Img, Positioned, Stack, Text
 from PIL import Image
-from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
 
 
@@ -19,12 +18,8 @@ class CitibikeState:
 class Screen(BaseScreen[CitibikeState]):
     def __init__(self, station_id=None, station_name=None):
         super().__init__(initial_state=CitibikeState())
-        self.font = FONTS["5x8"]
-        self.white = COLORS["white"]
-        self.green = COLORS["green"]
-        self.bike = Image.open("./images/bike.png")
-        self.ebike = Image.open("./images/ebike.png")
-
+        self.bike = Image.open("./images/bike.png").convert("RGB")
+        self.ebike = Image.open("./images/ebike.png").convert("RGB")
         self.station_id = station_id
         self.station_name = station_name
 
@@ -66,39 +61,17 @@ class Screen(BaseScreen[CitibikeState]):
             station_name=station_name,
         )
 
-    def text_offset(self, char):
+    def _text_offset(self, char):
         return 61 - len(char) * 4
 
-    def render(self, canvas, state: CitibikeState):
+    def build(self, state: CitibikeState):
         if not state.num_bikes:
-            return
+            return Stack(children=[])
 
-        canvas.SetImage(self.bike.convert("RGB"), offset_x=3, offset_y=10)
-
-        canvas.SetImage(
-            self.ebike.convert("RGB"),
-            offset_x=self.text_offset(state.num_ebikes) - 5,
-            offset_y=23,
-        )
-
-        graphics.DrawText(
-            canvas, self.font, 2, 7, self.white, state.station_name.upper()
-        )
-
-        graphics.DrawText(
-            canvas,
-            self.font,
-            self.text_offset(state.num_bikes),
-            18,
-            self.white,
-            state.num_bikes,
-        )
-
-        graphics.DrawText(
-            canvas,
-            self.font,
-            self.text_offset(state.num_ebikes),
-            28,
-            self.white,
-            state.num_ebikes,
-        )
+        return Stack(children=[
+            Positioned(x=2, y=0, child=Text(state.station_name.upper(), font="5x8", color=Colors.white)),
+            Positioned(x=3, y=10, child=Img(self.bike)),
+            Positioned(x=self._text_offset(state.num_bikes), y=10, child=Text(state.num_bikes, font="5x8", color=Colors.white)),
+            Positioned(x=self._text_offset(state.num_ebikes) - 5, y=23, child=Img(self.ebike)),
+            Positioned(x=self._text_offset(state.num_ebikes), y=20, child=Text(state.num_ebikes, font="5x8", color=Colors.white)),
+        ])

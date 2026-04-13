@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
+from lib.colors import Colors
 from lib.subway_times import SubwayTimes
+from lib.ui import Img, Line, Positioned, Stack, Text
 from PIL import Image
-from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
 
 
@@ -19,11 +18,6 @@ class Screen(BaseScreen[SubwayState]):
         super().__init__(initial_state=SubwayState())
         self.g_train_logo = Image.open("./images/subway_g.png").convert("RGB")
         self.g_train_logo.thumbnail((11, 11), Image.NEAREST)
-
-        self.font = FONTS["4x6"]
-        self.stationColor = COLORS["white"]
-        self.clockColor = COLORS["yellow"]
-        self.lineColor = COLORS["gray"]
 
     def setup(self):
         self.run_on_interval(self._fetch_subway, seconds=30)
@@ -46,34 +40,16 @@ class Screen(BaseScreen[SubwayState]):
 
         self.set_state(court_sq=court_sq, church_ave=church_ave)
 
-    def render(self, canvas, state: SubwayState):
+    def build(self, state: SubwayState):
         if not state.court_sq:
-            return
+            return Stack(children=[])
 
-        canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=2)
-        graphics.DrawText(
-            canvas, self.font, 18, 7, self.stationColor, "COURT SQ"
-        )
-        graphics.DrawText(
-            canvas,
-            self.font,
-            18,
-            14,
-            self.clockColor,
-            state.court_sq,
-        )
-
-        graphics.DrawLine(canvas, 0, 15, 63, 15, self.lineColor)
-
-        canvas.SetImage(self.g_train_logo, offset_x=3, offset_y=18)
-        graphics.DrawText(
-            canvas, self.font, 18, 24, self.stationColor, "CHURCH AVE"
-        )
-        graphics.DrawText(
-            canvas,
-            self.font,
-            18,
-            31,
-            self.clockColor,
-            state.church_ave,
-        )
+        return Stack(children=[
+            Positioned(x=3, y=2, child=Img(self.g_train_logo)),
+            Positioned(x=18, y=1, child=Text("COURT SQ", font="4x6", color=Colors.white)),
+            Positioned(x=18, y=8, child=Text(state.court_sq, font="4x6", color=Colors.yellow)),
+            Positioned(x=0, y=15, child=Line(0, 0, 63, 0, color=Colors.gray)),
+            Positioned(x=3, y=18, child=Img(self.g_train_logo)),
+            Positioned(x=18, y=18, child=Text("CHURCH AVE", font="4x6", color=Colors.white)),
+            Positioned(x=18, y=25, child=Text(state.church_ave, font="4x6", color=Colors.yellow)),
+        ])

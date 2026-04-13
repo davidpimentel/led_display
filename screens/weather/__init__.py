@@ -1,12 +1,11 @@
 import os
 from dataclasses import dataclass
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
-from lib.view_helper.text import TextScroller
+from lib.colors import Colors
+from lib.fonts import FontRegistry
+from lib.ui import AnimatedText, Img, Positioned, Scroll, Stack, Text
 from lib.weather import get_current_weather
 from PIL import Image
-from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
 
 SCREEN_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
@@ -25,13 +24,7 @@ class Screen(BaseScreen[WeatherState]):
         super().__init__(initial_state=WeatherState())
         self.lat = lat
         self.lon = lon
-        self.scroll_font = FONTS["5x8"]
-        self.temp_font = FONTS["6x12"]
-        self.white = COLORS["white"]
-        self.gray = COLORS["gray"]
-        self.text_scroller = TextScroller(
-            font=self.scroll_font, text_color=self.white, position_y=28
-        )
+        self.scroller = Scroll(font="5x8")
 
     def setup(self):
         self.run_on_interval(self._fetch_weather, seconds=60)
@@ -56,25 +49,18 @@ class Screen(BaseScreen[WeatherState]):
         )
 
     def _animate(self):
+        self.scroller.tick()
         self.set_state()
 
-    def render(self, canvas, state: WeatherState):
+    def build(self, state: WeatherState):
         if state.icon_image is None:
-            return
+            return Stack(children=[])
 
-        self.text_scroller.update_text(state.description)
-        self.text_scroller.render(canvas)
+        temp_width = FontRegistry.text_width("6x12", state.temp)
 
-        canvas.SetImage(state.icon_image, 4, 4)
-
-        hi_temp_len = graphics.DrawText(
-            canvas, self.temp_font, 25, 16, self.white, state.temp
-        )
-        graphics.DrawText(
-            canvas,
-            self.temp_font,
-            28 + hi_temp_len,
-            16,
-            self.gray,
-            state.feels_like_temp,
-        )
+        return Stack(children=[
+            Positioned(x=4, y=4, child=Img(state.icon_image)),
+            Positioned(x=25, y=4, child=Text(state.temp, font="6x12", color=Colors.white)),
+            Positioned(x=28 + temp_width, y=4, child=Text(state.feels_like_temp, font="6x12", color=Colors.gray)),
+            Positioned(x=0, y=20, child=AnimatedText(state.description, font="5x8", color=Colors.white, animator=self.scroller)),
+        ])
