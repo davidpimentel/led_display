@@ -62,7 +62,7 @@ class FlaskApp:
         return send_from_directory("templates", "manifest.json")
 
     def list_screens(self):
-        return json.dumps([screen["id"] for screen in self.screens])
+        return json.dumps(self.screens)
 
     def current_screen(self):
         return json.dumps({"screen_id": self.get_current_screen()})

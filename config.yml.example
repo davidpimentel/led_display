@@ -1,36 +1,9 @@
-screens:
-  -
-    id: clock
-    screen_name: clock
-  -
-    id: weather
-    screen_name: weather
-    args:
-      lat: "40.725686"
-      lon: "-73.944226"
-  -
-    id: gym_count
-    screen_name: gym_count
-  -
-    id: spotify_dave
-    screen_name: spotify
-    args:
-      username: dave
-  -
-    id: subway
-    screen_name: subway
-  -
-    id: who_chooses
-    screen_name: who_chooses
-  -
-    id: citibike
-    screen_name: citibike
-    args:
-      station_id: "3108"
-      station_name: Nassau Ave
-  -
-    id: color_test
-    screen_name: color_test
-  -
-    id: coffee_timer
-    screen_name: coffee_timer
+default_screen: clock
+
+screen_args:
+  weather:
+    lat: "40.725686"
+    lon: "-73.944226"
+  citibike:
+    station_id: "3108"
+    station_name: Nassau Ave
