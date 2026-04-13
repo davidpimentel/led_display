@@ -45,6 +45,32 @@ class Positioned(Widget):
         )
 
 
+class Column(Widget):
+    def __init__(self, children=None, gap: int = 0):
+        self.children = children or []
+        self.gap = gap
+
+    def measure(self, available_width, available_height):
+        total_w = 0
+        total_h = 0
+        for i, child in enumerate(self.children):
+            size = child.measure(available_width, available_height - total_h)
+            total_w = max(total_w, size.width)
+            total_h += size.height
+            if i < len(self.children) - 1:
+                total_h += self.gap
+        return Size(total_w, total_h)
+
+    def paint(self, canvas, x, y, available_width, available_height):
+        offset_y = 0
+        for i, child in enumerate(self.children):
+            size = child.measure(available_width, available_height - offset_y)
+            child.paint(canvas, x, y + offset_y, available_width, available_height - offset_y)
+            offset_y += size.height
+            if i < len(self.children) - 1:
+                offset_y += self.gap
+
+
 class Padding(Widget):
     def __init__(self, child, left: int = 0, top: int = 0, right: int = 0, bottom: int = 0):
         self.child = child
