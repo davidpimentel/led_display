@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
-from rgbmatrix import graphics
+from lib.colors import Colors
+from lib.ui import Positioned, Stack, Text
 from screens.base_screen import BaseScreen
 
 from .fetch_matchup import FantasyFetcher
@@ -26,7 +25,6 @@ class Screen(BaseScreen[FantasyFootballState]):
         self.espn_s2 = espn_s2
         self.swid = swid
         self.fetcher = None
-        self.font = FONTS["4x6"]
 
     def setup(self):
         self.run_on_interval(self._fetch_scores, seconds=30)
@@ -45,14 +43,10 @@ class Screen(BaseScreen[FantasyFootballState]):
                 their_projected=str(result.opponent_team.projected),
             )
 
-    def render(self, canvas, state: FantasyFootballState):
-        graphics.DrawText(canvas, self.font, 4, 10, COLORS["white"], state.your_score)
-        graphics.DrawText(
-            canvas, self.font, 4, 20, COLORS["gray"], state.your_projected
-        )
-        graphics.DrawText(
-            canvas, self.font, 32, 10, COLORS["white"], state.their_score
-        )
-        graphics.DrawText(
-            canvas, self.font, 32, 20, COLORS["gray"], state.their_projected
-        )
+    def build(self, state: FantasyFootballState):
+        return Stack(children=[
+            Positioned(x=4, y=4, child=Text(state.your_score, font="4x6", color=Colors.white)),
+            Positioned(x=4, y=14, child=Text(state.your_projected, font="4x6", color=Colors.gray)),
+            Positioned(x=32, y=4, child=Text(state.their_score, font="4x6", color=Colors.white)),
+            Positioned(x=32, y=14, child=Text(state.their_projected, font="4x6", color=Colors.gray)),
+        ])
