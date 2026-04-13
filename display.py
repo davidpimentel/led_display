@@ -1,3 +1,5 @@
+import argparse
+
 import yaml
 from dotenv import load_dotenv
 
@@ -6,7 +8,7 @@ from lib.screen_manager import ScreenManager
 
 
 class Display:
-    def __init__(self):
+    def __init__(self, initial_screen=None):
         # Config
         with open("config.yml", "r", encoding="utf-8") as config_file:
             config = yaml.safe_load(config_file)
@@ -16,7 +18,10 @@ class Display:
         self.screen = None
         self.screen_id = None
         self.screens = config["screens"]
-        self.set_to_default()
+        if initial_screen:
+            self.load_screen(initial_screen, {}, display_indefinitely=True)
+        else:
+            self.set_to_default()
 
         # Web app
         self.flask_app = FlaskApp(
@@ -64,4 +69,8 @@ class Display:
 # This loads in environment variables from .env file
 load_dotenv()
 
-Display().run()
+parser = argparse.ArgumentParser()
+parser.add_argument("--initial-screen", default=None)
+args = parser.parse_args()
+
+Display(initial_screen=args.initial_screen).run()
