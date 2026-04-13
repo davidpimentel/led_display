@@ -1,13 +1,12 @@
 import json
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import floor
 from typing import Optional
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
-from lib.view_helper.text import TextOscillator, right_align_text
-from rgbmatrix import graphics
+from lib.colors import Colors
+from lib.fonts import FontRegistry
+from lib.ui import AnimatedText, Oscillate, Positioned, Stack, Text
 from screens.base_screen import BaseScreen
 
 
@@ -28,11 +27,7 @@ class Screen(BaseScreen[StretchingState]):
         )
         self.rest_duration = 5
         self.exercises_iter = iter(json.loads(config))
-        self.font = FONTS["5x8"]
-        self.white = COLORS["white"]
-        self.exercise_name_scroller = TextOscillator(
-            self.font, self.white, self.font.height, 3
-        )
+        self.exercise_oscillator = Oscillate(font="5x8", delay=3)
         self._next_exercise()
 
     def setup(self):
@@ -50,6 +45,8 @@ class Screen(BaseScreen[StretchingState]):
         if state.done:
             return
 
+        self.exercise_oscillator.tick()
+
         if state.is_resting:
             rest_left = floor(self.rest_duration - (time.time() - state.rest_time_start))
             if rest_left <= 0:
@@ -66,44 +63,31 @@ class Screen(BaseScreen[StretchingState]):
             else:
                 self.set_state()
 
-    def render(self, canvas, state: StretchingState):
+    def build(self, state: StretchingState):
         if state.done:
-            graphics.DrawText(
-                canvas,
-                self.font,
-                5,
-                canvas.height / 2,
-                self.white,
-                "Done",
-            )
-            return
+            return Stack(children=[
+                Positioned(x=5, y=12, child=Text("Done", font="5x8", color=Colors.white))
+            ])
 
         if state.current_exercise is None:
-            return
+            return Stack(children=[])
 
-        self.exercise_name_scroller.update_text(state.current_exercise["name"])
-        self.exercise_name_scroller.render(canvas)
+        children = [
+            Positioned(x=0, y=0, child=AnimatedText(state.current_exercise["name"], font="5x8", color=Colors.white, animator=self.exercise_oscillator))
+        ]
 
         if state.is_resting:
-            graphics.DrawText(
-                canvas,
-                self.font,
-                5,
-                canvas.height - self.font.height,
-                self.white,
-                "in...",
-            )
+            children.append(Positioned(x=5, y=24, child=Text("in...", font="5x8", color=Colors.white)))
             countdown = floor(self.rest_duration - (time.time() - state.rest_time_start))
         else:
             countdown = floor(
                 state.current_exercise["duration"] - (time.time() - state.exercise_start)
             )
 
-        right_align_text(
-            canvas,
-            str(countdown),
-            self.font,
-            self.white,
-            canvas.height - self.font.height,
-            5,
-        )
+        countdown_text = str(countdown)
+        countdown_width = FontRegistry.text_width("5x8", countdown_text)
+        countdown_x = self.width - countdown_width - 5
+
+        children.append(Positioned(x=countdown_x, y=24, child=Text(countdown_text, font="5x8", color=Colors.white)))
+
+        return Stack(children=children)
