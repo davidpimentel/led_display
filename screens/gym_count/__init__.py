@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from urllib import request
 
-from lib.colors import COLORS
-from lib.fonts import FONTS
+from lib.colors import Colors
+from lib.ui import Img, Positioned, Stack, Text
 from lib.weather import get_current_weather
 from PIL import Image
-from rgbmatrix import graphics
 from screens.base_screen import BaseScreen
 
 
@@ -18,10 +17,7 @@ class GymCountState:
 class Screen(BaseScreen[GymCountState]):
     def __init__(self):
         super().__init__(initial_state=GymCountState())
-        self.vital_logo = Image.open("./images/vital_logo.png")
-        self.font = FONTS["6x9"]
-        self.white = COLORS["white"]
-        self.green = COLORS["green"]
+        self.vital_logo = Image.open("./images/vital_logo.png").convert("RGB")
 
     def setup(self):
         self.run_on_interval(self._fetch_data, seconds=30)
@@ -38,17 +34,12 @@ class Screen(BaseScreen[GymCountState]):
             feels_like_temp=feels_like_temp,
         )
 
-    def render(self, canvas, state: GymCountState):
+    def build(self, state: GymCountState):
         if not state.people_at_gym:
-            return
+            return Stack(children=[])
 
-        canvas.SetImage(
-            self.vital_logo.convert("RGB"), offset_x=3, offset_y=3
-        )
-
-        graphics.DrawText(
-            canvas, self.font, 8, 28, self.green, state.people_at_gym
-        )
-        graphics.DrawText(
-            canvas, self.font, 42, 28, self.white, state.feels_like_temp + "°"
-        )
+        return Stack(children=[
+            Positioned(x=3, y=3, child=Img(self.vital_logo)),
+            Positioned(x=8, y=19, child=Text(state.people_at_gym, font="6x9", color=Colors.green)),
+            Positioned(x=42, y=19, child=Text(state.feels_like_temp + "°", font="6x9", color=Colors.white)),
+        ])
