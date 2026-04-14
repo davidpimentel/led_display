@@ -88,3 +88,34 @@ class Spacer(Widget):
 
     def measure(self, available_width, available_height):
         return Size(self.w, self.h)
+
+
+class PixelGrid(Widget):
+    """A fixed-size grid of individually addressable pixels.
+
+    `pixels` is a matrix (list of rows) where each cell may be:
+      - a Color instance: drawn with that color
+      - a falsy value (None, False, 0): not drawn (transparent)
+      - any other truthy value: drawn with the default `color`
+    """
+
+    def __init__(self, width: int, height: int, pixels, color: Color = None):
+        self.w = width
+        self.h = height
+        self.default_color = color
+        self.pixels = pixels
+
+    def measure(self, available_width, available_height):
+        return Size(self.w, self.h)
+
+    def paint(self, canvas, x, y, available_width, available_height):
+        default = self.default_color
+        for py in range(min(self.h, len(self.pixels))):
+            row = self.pixels[py]
+            for px in range(min(self.w, len(row))):
+                cell = row[px]
+                if not cell:
+                    continue
+                c = cell if isinstance(cell, Color) else default
+                if c is not None:
+                    canvas.SetPixel(x + px, y + py, c.r, c.g, c.b)
