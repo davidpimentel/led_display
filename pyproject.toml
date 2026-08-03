@@ -17,6 +17,10 @@ dependencies = [
     "pytz==2021.3",
     "pyyaml==6.0.3",
     "requests==2.27.1",
-    "rgbmatrixemulator>=0.9.1",
     "spotipy==2.19.0",
+]
+
+[dependency-groups]
+dev = [
+    "rgbmatrixemulator>=0.9.1",
 ]
