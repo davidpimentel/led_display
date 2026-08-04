@@ -3,7 +3,7 @@ import os
 import sys
 import time
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 
 import aiohttp
 from huckleberry_api import HuckleberryAPI
@@ -58,7 +58,7 @@ class Screen(BaseScreen[HuckleberryState]):
                 )
                 await api.authenticate()
 
-                now = datetime.now(tz=UTC)
+                now = datetime.now(tz=timezone.UTC)
                 seven_days_ago = now - timedelta(days=7)
 
                 feed_intervals = await api.list_feed_intervals(
