@@ -3,9 +3,8 @@ Description=LED Display
 
 [Service]
 WorkingDirectory=/home/pi/display
-ExecStart=/home/pi/.local/bin/uv run display.py
+ExecStart=sudo -E uv run display.py
 Restart=on-failure
-User=pi
 
 [Install]
 WantedBy=multi-user.target
