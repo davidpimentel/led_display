@@ -3,7 +3,7 @@ Description=LED Display
 
 [Service]
 WorkingDirectory=/home/pi/display
-ExecStart=/home/pi/.local/bin/uv run --no-dev display.py
+ExecStart=/home/pi/.local/bin/uv run display.py
 Restart=on-failure
 User=pi
 
