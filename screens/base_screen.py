@@ -3,8 +3,6 @@ from dataclasses import replace
 from threading import Event, Lock, Thread
 from typing import Generic, TypeVar
 
-from lib.ui.widget import Widget
-
 S = TypeVar("S")
 
 
@@ -58,5 +56,5 @@ class BaseScreen(Generic[S]):
     def display_duration(self):
         return None if self.display_indefinitely else self.duration
 
-    def build(self, state: S) -> Widget | None:
+    def build(self, state: S):
         return None
