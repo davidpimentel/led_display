@@ -3,11 +3,20 @@ from dataclasses import replace
 from threading import Event, Lock, Thread
 from typing import Generic, TypeVar
 
+from lib.ui.widget import Widget
+
 S = TypeVar("S")
 
 
 class BaseScreen(Generic[S]):
-    def __init__(self, initial_state: S, display_indefinitely=False, duration=30, width=64, height=32):
+    def __init__(
+        self,
+        initial_state: S,
+        display_indefinitely=False,
+        duration=30,
+        width=64,
+        height=32,
+    ):
         self.display_indefinitely = display_indefinitely
         self.duration = duration
         self.width = width
@@ -49,5 +58,5 @@ class BaseScreen(Generic[S]):
     def display_duration(self):
         return None if self.display_indefinitely else self.duration
 
-    def build(self, state: S):
+    def build(self, state: S) -> Widget | None:
         return None
