@@ -8,11 +8,17 @@ from screens.base_screen import BaseScreen
 @dataclass
 class HuckleberryState:
     bottle_ago: str = ""
+    sleep_state: str = ""
+    sleep_ago: str = ""
 
 
 class Screen(BaseScreen[HuckleberryState]):
-    def __init__(self, bottle_ago=""):
-        super().__init__(initial_state=HuckleberryState(bottle_ago=bottle_ago))
+    def __init__(self, bottle_ago="", sleep_state="", sleep_ago=""):
+        super().__init__(
+            initial_state=HuckleberryState(
+                bottle_ago=bottle_ago, sleep_state=sleep_state, sleep_ago=sleep_ago
+            )
+        )
 
     def setup(self):
         self.run_on_interval(self._update_time, seconds=60)
@@ -31,7 +37,8 @@ class Screen(BaseScreen[HuckleberryState]):
                 ]
             )
 
-        bottle_label = Text("BTL:", font="5x8", color=Colors.white)
+        bottle_label = Text("B: ", font="5x8", color=Colors.white)
+        sleep_label = Text("Z: ", font="5x8", color=Colors.white)
         offset = 4
         return Stack(
             children=[
@@ -40,6 +47,16 @@ class Screen(BaseScreen[HuckleberryState]):
                     x=offset + bottle_label.width,
                     y=4,
                     child=Text(state.bottle_ago, font="5x8", color=Colors.teal),
+                ),
+                Positioned(x=offset, y=18, child=sleep_label),
+                Positioned(
+                    x=offset + sleep_label.width,
+                    y=18,
+                    child=Text(
+                        f"{state.sleep_ago}{' ago' if state.sleep_state == 'active' else ''}",
+                        font="5x8",
+                        color=Colors.green,
+                    ),
                 ),
             ]
         )
